@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 4.1)
+
 set(Namespace_SRCS
         freecad/advanced_shapestrings/init_gui.py
         freecad/advanced_shapestrings/__init__.py

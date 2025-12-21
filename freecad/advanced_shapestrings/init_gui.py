@@ -20,7 +20,9 @@ class AdvancedShapestrings(Gui.Workbench):
     MenuText = translate("Workbench", "AdvancedShapestrings")
     ToolTip = translate("Workbench", "a simple AdvancedShapestrings")
     Icon = os.path.join(ICONPATH, "cool.svg")
-    toolbox = []
+    toolbox = [
+        "Draft_SpacedShapeString",  # SpacedShapeString
+    ]
 
     def GetClassName(self):
         return "Gui::PythonWorkbench"
@@ -30,6 +32,14 @@ class AdvancedShapestrings(Gui.Workbench):
         This function is called at the first activation of the workbench.
         here is the place to import all the commands
         """
+
+        try:
+            import freecad.advanced_shapestrings.AdvancedShapestringTools
+        except Exception as exc:
+            App.Console.PrintError(exc)
+            App.Console.PrintError("Error: Initializing one or more "
+                                       "of the Draft modules failed, "
+                                       "Draft will not work as expected.\n")
 
         App.Console.PrintMessage(translate(
             "Log",
