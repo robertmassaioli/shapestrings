@@ -1,49 +1,54 @@
 # ***************************************************************************
-# *   (c) 2009 Yorik van Havre <yorik@uncreated.net>                        *
-# *   (c) 2020 Eliud Cabrera Castillo <e.cabrera-castillo@tum.de>           *
-# *                                                                         *
-# *   This file is part of the FreeCAD CAx development system.              *
-# *                                                                         *
-# *   This program is free software; you can redistribute it and/or modify  *
-# *   it under the terms of the GNU Lesser General Public License (LGPL)    *
-# *   as published by the Free Software Foundation; either version 2 of     *
-# *   the License, or (at your option) any later version.                   *
-# *   for detail see the LICENCE text file.                                 *
-# *                                                                         *
-# *   FreeCAD is distributed in the hope that it will be useful,            *
-# *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
-# *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
-# *   GNU Library General Public License for more details.                  *
-# *                                                                         *
-# *   You should have received a copy of the GNU Library General Public     *
-# *   License along with FreeCAD; if not, write to the Free Software        *
-# *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
-# *   USA                                                                   *
-# *                                                                         *
+# * (c) 2009 Yorik van Havre *
+# * (c) 2020 Eliud Cabrera Castillo *
+# *
+# * This file is part of the FreeCAD CAx development system. *
+# *
+# * This program is free software; you can redistribute it and/or modify *
+# * it under the terms of the GNU Lesser General Public License (LGPL) *
+# * as published by the Free Software Foundation; either version 2 of *
+# * the License, or (at your option) any later version. *
+# * for detail see the LICENCE text file. *
+# *
+# * FreeCAD is distributed in the hope that it will be useful, *
+# * but WITHOUT ANY WARRANTY; without even the implied warranty of *
+# * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the *
+# * GNU Library General Public License for more details. *
+# *
+# * You should have received a copy of the GNU Library General Public *
+# * License along with FreeCAD; if not, write to the Free Software *
+# * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 *
+# * USA *
+# *
 # ***************************************************************************
+
 """Provides the task panel code for the Draft SpacedShapeString tool."""
+
 ## @package task_spacedshapestring
 # \ingroup drafttaskpanels
 # \brief Provides the task panel code for the Draft SpacedShapeString tool.
-
-
 ## \addtogroup drafttaskpanels
 # @{
+
 import PySide.QtCore as QtCore
 import PySide.QtGui as QtGui
 
 import FreeCAD as App
 import FreeCADGui as Gui
+
 import Draft_rc
+
 from draftguitools import gui_tool_utils
 from draftutils.messages import _err
 from draftutils.params import get_param
 from draftutils.translate import translate
 from DraftVecUtils import toString
+
 from .paths import get_icon_path, get_ui_path
 
 # So the resource file doesn't trigger errors from code checkers (flake8)
 True if Draft_rc.__name__ else False
+
 
 class SpacedShapeStringTaskPanel:
     """Base class for Draft_SpacedShapeString task panel."""
@@ -66,22 +71,30 @@ class SpacedShapeStringTaskPanel:
         self.form.setWindowIcon(QtGui.QIcon(get_icon_path("Draft_SpacedShapeString.svg")))
 
         unit_length = App.Units.Quantity(0.0, App.Units.Length).getUserPreferred()[2]
+
         self.form.sbX.setProperty("rawValue", point.x)
         self.form.sbX.setProperty("unit", unit_length)
         self.form.sbY.setProperty("rawValue", point.y)
         self.form.sbY.setProperty("unit", unit_length)
         self.form.sbZ.setProperty("rawValue", point.z)
         self.form.sbZ.setProperty("unit", unit_length)
+
         self.form.sbHeight.setProperty("rawValue", size)
         self.form.sbHeight.setProperty("unit", unit_length)
 
-        # Multi-string input: one line per string
+        # Populate listStrings instead of pteStrings
+        list_widget = self.form.listStrings
+        list_widget.clear()
         if strings:
-            text_block = "\n".join(strings)
+            for s in strings:
+                item = QtGui.QListWidgetItem(s)
+                item.setFlags(item.flags() | QtCore.Qt.ItemIsEditable)
+                list_widget.addItem(item)
         else:
-            text_block = translate("draft", "Default")
-        self.stringsText = text_block
-        self.form.pteStrings.setPlainText(self.stringsText)
+            # Provide a default editable item
+            item = QtGui.QListWidgetItem(translate("draft", "Default"))
+            item.setFlags(item.flags() | QtCore.Qt.ItemIsEditable)
+            list_widget.addItem(item)
 
         # Offset and UseBoundingBox controls
         self.form.sbOffset.setProperty("rawValue", offset)
@@ -89,13 +102,16 @@ class SpacedShapeStringTaskPanel:
         self.form.cbUseBoundingBox.setChecked(bool(use_bounding_box))
 
         self.platWinDialog("Overwrite")
+
         self.fileSpec = font if font else get_param("FontFile")
         self.form.fcFontFile.setFileName(self.fileSpec)
 
         self.point = point
         self.pointPicked = False
+
         # Default for the "DontUseNativeFontDialog" preference:
         self.font_dialog_pref = False
+
         # Dummy attribute used by gui_tool_utils.getPoint in action method
         self.node = None
 
@@ -104,6 +120,7 @@ class SpacedShapeStringTaskPanel:
             QtCore.SIGNAL("fileNameSelected(const QString&)"),
             self.fileSelect,
         )
+
         QtCore.QObject.connect(
             self.form.pbReset,
             QtCore.SIGNAL("clicked()"),
@@ -145,11 +162,11 @@ class SpacedShapeStringTaskPanel:
     def platWinDialog(self, flag):
         """Handle the type of dialog depending on the platform."""
         ParamGroup = App.ParamGet("User parameter:BaseApp/Preferences/Dialog")
+
         if flag == "Overwrite":
             if "DontUseNativeFontDialog" not in ParamGroup.GetBools():
                 # initialize nonexisting one
                 ParamGroup.SetBool("DontUseNativeFontDialog", True)
-
             param = ParamGroup.GetBool("DontUseNativeFontDialog")
             self.font_dialog_pref = ParamGroup.GetBool("DontUseNativeDialog")
             ParamGroup.SetBool("DontUseNativeDialog", param)
@@ -179,16 +196,21 @@ class SpacedShapeStringTaskPanelCmd(SpacedShapeStringTaskPanel):
         return True
 
     def _collectStrings(self):
-        """Read strings from the UI, one per line."""
-        raw = self.form.pteStrings.toPlainText()
-        lines = [s.strip() for s in raw.splitlines()]
-        # Filter out empty lines
-        return [s for s in lines if s]
+        """Read strings from the listStrings widget, one row per string."""
+        items = []
+        list_widget = self.form.listStrings
+        for i in range(list_widget.count()):
+            text = list_widget.item(i).text().strip()
+            if text:
+                items.append(text)
+        return items
 
     def createObject(self):
         """Create SpacedShapeString object in the current document."""
+
         # Strings
         strings = self._collectStrings()
+
         # Escape each for Python string literal usage
         string_list_expr = "[" + ", ".join(
             ['"' + s.replace("\\", "\\\\").replace('"', '\\"') + '"' for s in strings]
@@ -249,6 +271,7 @@ class SpacedShapeStringTaskPanelEdit(SpacedShapeStringTaskPanel):
         font = vobj.Object.FontFile
 
         super().__init__(base, size, strings, offset, use_bounding_box, font)
+
         self.pointPicked = True
         self.vobj = vobj
         self.call = Gui.activeView().addEventCallback("SoEvent", self.action)
@@ -257,8 +280,8 @@ class SpacedShapeStringTaskPanelEdit(SpacedShapeStringTaskPanel):
         x = App.Units.Quantity(self.form.sbX.text()).Value
         y = App.Units.Quantity(self.form.sbY.text()).Value
         z = App.Units.Quantity(self.form.sbZ.text()).Value
-
         base = App.Vector(x, y, z)
+
         size = App.Units.Quantity(self.form.sbHeight.text()).Value
         strings = self._collectStrings()
         offset = App.Units.Quantity(self.form.sbOffset.text()).Value
@@ -287,6 +310,5 @@ class SpacedShapeStringTaskPanelEdit(SpacedShapeStringTaskPanel):
         Gui.Snapper.off()
         Gui.Control.closeDialog()
         return None
-
 
 ## @}

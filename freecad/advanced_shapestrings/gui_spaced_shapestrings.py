@@ -85,7 +85,7 @@ class SpacedShapeString:
         # if self.ui:
         #     self.ui.sourceCmd = self
         self.task = SpacedShapeStringTaskPanelCmd(self)
-        self.call = self.view.addEventCallback("SoEvent", self.task.action)
+        #self.call = self.view.addEventCallback("SoEvent", self.task.action)
         _toolmsg(translate("draft", "Pick SpacedShapeString location point"))
         todo.ToDo.delay(Gui.Control.showDialog, self.task)
 
