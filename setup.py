@@ -14,5 +14,5 @@ setup(name='freecad.advanced_shapestrings',
       maintainer_email="freecad@rmdir.app",
       url="github.com/echo_rm/advanced-shapestrings",
       description="Advanced tools that work like Shapestrings but even more powerful.",
-      install_requires=[Draft],
+      install_requires=[],
       include_package_data=True)

@@ -58,7 +58,7 @@ from draftutils.messages import _toolmsg, _err
 True if Draft_rc.__name__ else False
 
 
-class SpacedShapeString(gui_base_original.Creator):
+class SpacedShapeString:
     """Gui command for the SpacedShapeString tool."""
 
     def GetResources(self):
@@ -80,18 +80,18 @@ class SpacedShapeString(gui_base_original.Creator):
 
     def Activated(self):
         """Execute when the command is called."""
-        super().Activated(name="SpacedShapeString")
-        if self.ui:
-            self.ui.sourceCmd = self
-            self.task = SpacedShapeStringTaskPanelCmd(self)
-            self.call = self.view.addEventCallback("SoEvent", self.task.action)
-            _toolmsg(translate("draft", "Pick SpacedShapeString location point"))
-            todo.ToDo.delay(Gui.Control.showDialog, self.task)
+        # super().Activated(name="SpacedShapeString")
+        # if self.ui:
+        #     self.ui.sourceCmd = self
+        self.task = SpacedShapeStringTaskPanelCmd(self)
+        self.call = self.view.addEventCallback("SoEvent", self.task.action)
+        _toolmsg(translate("draft", "Pick SpacedShapeString location point"))
+        todo.ToDo.delay(Gui.Control.showDialog, self.task)
 
     def finish(self):
         """Finalize the command and remove callbacks."""
         self.end_callbacks(self.call)
-        super().finish()
+        # super().finish()
 
 
 Gui.addCommand('Draft_SpacedShapeString', SpacedShapeString())

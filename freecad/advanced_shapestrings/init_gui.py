@@ -1,16 +1,14 @@
 import os
 import FreeCADGui as Gui
 import FreeCAD as App
-from freecad. advanced_shapestrings import my_numpy_function
+from . import my_numpy_function
+from .paths import get_icon_path, get_translation_directory
 
 translate=App.Qt.translate
 QT_TRANSLATE_NOOP=App.Qt.QT_TRANSLATE_NOOP
 
-ICONPATH = os.path.join(os.path.dirname(__file__), "resources")
-TRANSLATIONSPATH = os.path.join(os.path.dirname(__file__), "resources", "translations")
-
 # Add translations path
-Gui.addLanguagePath(TRANSLATIONSPATH)
+Gui.addLanguagePath(get_translation_directory())
 Gui.updateLocale()
 
 class AdvancedShapestrings(Gui.Workbench):
@@ -19,7 +17,7 @@ class AdvancedShapestrings(Gui.Workbench):
     """
     MenuText = translate("Workbench", "AdvancedShapestrings")
     ToolTip = translate("Workbench", "a simple AdvancedShapestrings")
-    Icon = os.path.join(ICONPATH, "cool.svg")
+    Icon = get_icon_path("cool.svg")
     toolbox = [
         "Draft_SpacedShapeString",  # SpacedShapeString
     ]
@@ -34,7 +32,7 @@ class AdvancedShapestrings(Gui.Workbench):
         """
 
         try:
-            import freecad.advanced_shapestrings.AdvancedShapestringTools
+            from . import AdvancedShapestringTools
         except Exception as exc:
             App.Console.PrintError(exc)
             App.Console.PrintError("Error: Initializing one or more "

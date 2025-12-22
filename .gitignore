@@ -1,2 +1,6 @@
 CMakeCache.txt
 CMakeFiles
+.venv/
+build/
+dist/
+*.egg-info
