@@ -205,6 +205,16 @@ class SpacedShapeStringTaskPanel:
         del item
         self.updateRemoveButtonState()
 
+    def collectStrings(self):
+        """Read strings from the listStrings widget, one row per string."""
+        items = []
+        list_widget = self.form.listStrings
+        for i in range(list_widget.count()):
+            text = list_widget.item(i).text().strip()
+            if text:
+                items.append(text)
+        return items
+
     def updateRemoveButtonState(self):
         """Enable/disable the Remove button depending on the number of items."""
         list_widget = self.form.listStrings
@@ -274,21 +284,11 @@ class SpacedShapeStringTaskPanelCmd(SpacedShapeStringTaskPanel):
         self.platWinDialog("Restore")
         return True
 
-    def _collectStrings(self):
-        """Read strings from the listStrings widget, one row per string."""
-        items = []
-        list_widget = self.form.listStrings
-        for i in range(list_widget.count()):
-            text = list_widget.item(i).text().strip()
-            if text:
-                items.append(text)
-        return items
-
     def createObject(self):
         """Create SpacedShapeString object in the current document."""
 
         # Strings
-        strings = self._collectStrings()
+        strings = self.collectStrings()
 
         # Escape each for Python string literal usage
         string_list_expr = "[" + ", ".join(
@@ -312,6 +312,7 @@ class SpacedShapeStringTaskPanelCmd(SpacedShapeStringTaskPanel):
         try:
             qr, sup, points, fil = self.sourceCmd.getStrings()
             c = "freecad.advanced_shapestrings"
+            Gui.addModule("Draft")
             Gui.addModule(f"{c}.AdvancedShapestring")
             commands = [
                 (
@@ -325,7 +326,7 @@ class SpacedShapeStringTaskPanelCmd(SpacedShapeStringTaskPanel):
                 f"plm.Rotation.Q = {qr}",
                 "ss.Placement = plm",
                 f"ss.AttachmentSupport = {sup}",
-                "Draft.autogroup(ss)",
+                "Draft.autogroup(ss)", # Requires the "Draft" module
                 "FreeCAD.ActiveDocument.recompute()",
             ]
             # Print the commands that will be passed to commit for debugging/logging
@@ -361,7 +362,7 @@ class SpacedShapeStringTaskPanelEdit(SpacedShapeStringTaskPanel):
         base = App.Vector(x, y, z)
 
         size = App.Units.Quantity(self.form.sbHeight.text()).Value
-        strings = self._collectStrings()
+        strings = self.collectStrings()
         offset = App.Units.Quantity(self.form.sbOffset.text()).Value
         use_bounding_box = bool(self.form.cbUseBoundingBox.isChecked())
         font_file = self.fileSpec

@@ -34,7 +34,7 @@ import draftutils.gui_utils as gui_utils
 from .spaced_shapestring import SpacedShapeString
 
 if App.GuiUp:
-    from draftviewproviders.view_shapestring import ViewProviderShapeString
+    from .view_spacedshapestring import ViewProviderSpacedShapeString
 
 
 def make_spacedshapestring(Strings, FontFile, Size=100, Offset=10, UseBoundingBox=False):
@@ -46,7 +46,7 @@ def make_spacedshapestring(Strings, FontFile, Size=100, Offset=10, UseBoundingBo
     box width to compute spacing).
     """
     App.Console.PrintMessage("Creating SpacedShapeString object...\n")
-    
+
     if not App.ActiveDocument:
         App.Console.PrintError("No active document. Aborting\n")
         return
@@ -74,7 +74,7 @@ def make_spacedshapestring(Strings, FontFile, Size=100, Offset=10, UseBoundingBo
 
 
     if App.GuiUp:
-        ViewProviderShapeString(obj.ViewObject)
+        ViewProviderSpacedShapeString(obj.ViewObject)
         gui_utils.format_object(obj)
         obrep = obj.ViewObject
         if "PointSize" in obrep.PropertiesList:
