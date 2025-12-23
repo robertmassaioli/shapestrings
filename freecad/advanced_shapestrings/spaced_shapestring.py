@@ -209,12 +209,14 @@ class SpacedShapeString(DraftObject):
                     _toolmsg("type x_offset: {} repr: {}".format(type(x_offset), repr(x_offset)))
                     _toolmsg("type obj.Offset: {} repr: {}".format(type(obj.Offset), repr(obj.Offset)))
 
+                    # Update x_offset for bounding box width if needed
                     if obj.UseBoundingBox:
                         string_compound = Part.Compound(shapes)
                         bbox = string_compound.optimalBoundingBox()
-                        x_offset += bbox.XLength + obj.Offset
-                    else:
-                        x_offset += obj.Offset
+                        x_offset += App.Units.Quantity(bbox.XLength, App.Units.Length)
+
+                    # Add fixed offset
+                    x_offset += obj.Offset
 
                     all_shapes.extend(shapes)
 
