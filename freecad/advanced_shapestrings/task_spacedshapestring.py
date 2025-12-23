@@ -40,7 +40,7 @@ import FreeCADGui as Gui
 import Draft_rc
 
 from draftguitools import gui_tool_utils
-from draftutils.messages import _err
+from draftutils.messages import _err, _msg
 from draftutils.params import get_param
 from draftutils.translate import translate
 from DraftVecUtils import toString
@@ -313,28 +313,24 @@ class SpacedShapeStringTaskPanelCmd(SpacedShapeStringTaskPanel):
             qr, sup, points, fil = self.sourceCmd.getStrings()
             c = "freecad.advanced_shapestrings"
             Gui.addModule(f"{c}.AdvancedShapestring")
-            # You must implement Draft.make_spacedshapestring in draftmake.py
-            self.sourceCmd.commit(
-                translate("draft", "Create SpacedShapeString"),
-                [
-                    f"ss = {c}.AdvancedShapestring.make_spacedshapestring(Strings={strings}, "
-                    "FontFile={font}, Size={size}, Offset={offset}, "
-                    "UseBoundingBox={use_bbox})".format(
-                        strings=string_list_expr,
-                        font=FFile,
-                        size=Size,
-                        offset=Offset,
-                        use_bbox=UseBoundingBox,
-                    ),
-                    "plm = FreeCAD.Placement()",
-                    "plm.Base = " + toString(ssBase),
-                    "plm.Rotation.Q = " + qr,
-                    "ss.Placement = plm",
-                    "ss.AttachmentSupport = " + sup,
-                    "Draft.autogroup(ss)",
-                    "FreeCAD.ActiveDocument.recompute()",
-                ],
-            )
+            commands = [
+                (
+                    f"ss = {c}.AdvancedShapestring.make_spacedshapestring("
+                    f"Strings={string_list_expr}, "
+                    f"FontFile={FFile}, Size={Size}, Offset={Offset}, "
+                    f"UseBoundingBox={UseBoundingBox})"
+                ),
+                "plm = FreeCAD.Placement()",
+                f"plm.Base = {toString(ssBase)}",
+                f"plm.Rotation.Q = {qr}",
+                "ss.Placement = plm",
+                f"ss.AttachmentSupport = {sup}",
+                "Draft.autogroup(ss)",
+                "FreeCAD.ActiveDocument.recompute()",
+            ]
+            # Print the commands that will be passed to commit for debugging/logging
+            _msg("SpacedShapeString commit commands:\n" + "\n".join(commands))
+            self.sourceCmd.commit(translate("draft", "Create SpacedShapeString"), commands)
         except Exception:
             _err("Draft_SpacedShapeString: error delaying commit\n")
             # Also print the full Python traceback to the console/log

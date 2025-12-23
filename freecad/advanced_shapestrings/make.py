@@ -45,6 +45,8 @@ def make_spacedshapestring(Strings, FontFile, Size=100, Offset=10, UseBoundingBo
     by the specified offset (and optionally using each string's bounding
     box width to compute spacing).
     """
+    App.Console.PrintMessage("Creating SpacedShapeString object...\n")
+    
     if not App.ActiveDocument:
         App.Console.PrintError("No active document. Aborting\n")
         return
@@ -79,6 +81,8 @@ def make_spacedshapestring(Strings, FontFile, Size=100, Offset=10, UseBoundingBo
             obrep.PointSize = 1
         gui_utils.select(obj)
     obj.recompute()
+
+    App.Console.PrintMessage("SpacedShapeString object created successfully.\n")
     return obj
 
 

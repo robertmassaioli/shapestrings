@@ -53,7 +53,7 @@ import draftutils.todo as todo
 from .paths import get_icon_path
 from .task_spacedshapestring import SpacedShapeStringTaskPanelCmd
 from draftutils.translate import translate
-from draftutils.messages import _toolmsg, _err
+from draftutils.messages import _toolmsg, _err, _msg
 
 # The module is used to prevent complaints from code checkers (flake8)
 True if Draft_rc.__name__ else False
@@ -81,21 +81,25 @@ class SpacedShapeString(gui_base_original.Creator):
 
     def Activated(self):
         """Execute when the command is called."""
-        App.activeDraftCommand = self
         super().Activated(name="SpacedShapeString")
         if self.ui:
-            # self.ui = Gui.draftToolBar
+            self.ui = Gui.draftToolBar
             self.sourceCmd = self
             self.task = SpacedShapeStringTaskPanelCmd(self)
-        #self.call = self.view.addEventCallback("SoEvent", self.task.action)
+        self.call = self.view.addEventCallback("SoEvent", self.task.action)
         _toolmsg(translate("draft", "Pick SpacedShapeString location point"))
         todo.ToDo.delay(Gui.Control.showDialog, self.task)
 
     def finish(self):
         """Finalize the command and remove callbacks."""
-        # self.end_callbacks(self.call)
-        # super().finish()
-
+        
+        if not hasattr(self, 'planetrack'):
+            self.planetrack = None
+        if hasattr(self, 'call'):
+            self.end_callbacks(self.call)
+        if not hasattr(self, 'ui'):
+            self.ui = Gui.draftToolBar
+        super().finish()
 
 Gui.addCommand('Draft_SpacedShapeString', SpacedShapeString())
 

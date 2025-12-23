@@ -39,6 +39,7 @@ class AdvancedShapestrings(Gui.Workbench):
                 Gui.draftToolBar = DraftGui.DraftToolBar()    
             if not hasattr(Gui,"Snapper"):
                 Gui.Snapper = draftguitools.gui_snapper.Snapper()
+            App.activeDraftCommand = None
 
             from . import AdvancedShapestringTools
         except Exception as exc:
