@@ -1,2 +1,2 @@
 
-from freecad.advanced_shapestrings.gui_spaced_shapestrings import SpacedShapeString
+from .gui_spaced_shapestrings import SpacedShapeString

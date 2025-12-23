@@ -31,7 +31,7 @@
 import FreeCAD as App
 import draftutils.gui_utils as gui_utils
 
-from freecad.advanced_shapestrings.spaced_shapestring import SpacedShapeString
+from .spaced_shapestring import SpacedShapeString
 
 if App.GuiUp:
     from draftviewproviders.view_shapestring import ViewProviderShapeString
@@ -60,6 +60,16 @@ def make_spacedshapestring(Strings, FontFile, Size=100, Offset=10, UseBoundingBo
     obj.Size = Size
     obj.Offset = Offset
     obj.UseBoundingBox = bool(UseBoundingBox)
+
+    # Print all object properties to the FreeCAD console
+    App.Console.PrintMessage("SpacedShapeString properties:\n")
+    for prop in obj.PropertiesList:
+        try:
+            val = getattr(obj, prop)
+        except Exception as e:
+            val = "<unreadable: {}>".format(e)
+        App.Console.PrintMessage("  {} = {}\n".format(prop, val))
+
 
     if App.GuiUp:
         ViewProviderShapeString(obj.ViewObject)

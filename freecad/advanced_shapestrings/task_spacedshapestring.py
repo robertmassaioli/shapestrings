@@ -284,12 +284,13 @@ class SpacedShapeStringTaskPanelCmd(SpacedShapeStringTaskPanel):
 
         try:
             qr, sup, points, fil = self.sourceCmd.getStrings()
-            Gui.addModule("Draft")
+            c = "freecad.advanced_shapestrings"
+            Gui.addModule(f"{c}.AdvancedShapestring")
             # You must implement Draft.make_spacedshapestring in draftmake.py
             self.sourceCmd.commit(
                 translate("draft", "Create SpacedShapeString"),
                 [
-                    "ss = Draft.make_spacedshapestring(Strings={strings}, "
+                    f"ss = {c}.AdvancedShapestring.make_spacedshapestring(Strings={strings}, "
                     "FontFile={font}, Size={size}, Offset={offset}, "
                     "UseBoundingBox={use_bbox})".format(
                         strings=string_list_expr,
