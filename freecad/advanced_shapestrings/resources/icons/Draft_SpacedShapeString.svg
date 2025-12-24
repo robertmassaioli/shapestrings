@@ -92,17 +92,17 @@
 
     <!-- 3x2 grid: 6 translated copies of the scaled base -->
     <!-- top row -->
-    <g transform="translate(0,-0)">
+    <g transform="translate(0,12)">
       <use xlink:href="#Sbase" />
     </g>
-    <g transform="translate(20,-0)">
+    <g transform="translate(20,12)">
       <use xlink:href="#Sbase" />
     </g>
-    <g transform="translate(40,-0)">
+    <g transform="translate(40,12)">
       <use xlink:href="#Sbase" />
     </g>
 
-    <!-- bottom row -->
+    <!-- bottom row 
     <g transform="translate(0,20)">
       <use xlink:href="#Sbase" />
     </g>
@@ -112,6 +112,7 @@
     <g transform="translate(40,20)">
       <use xlink:href="#Sbase" />
     </g>
+    -->
 
   </g>
 
