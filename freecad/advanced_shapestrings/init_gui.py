@@ -1,4 +1,3 @@
-import os
 import FreeCADGui as Gui
 import FreeCAD as App
 from draftutils.messages import _msg
