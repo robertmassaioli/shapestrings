@@ -1,7 +1,7 @@
 import os
 import FreeCADGui as Gui
 import FreeCAD as App
-from . import my_numpy_function
+from draftutils.messages import _msg
 from .paths import get_icon_path, get_translation_directory
 
 translate=App.Qt.translate
@@ -16,7 +16,7 @@ class AdvancedShapestrings(Gui.Workbench):
     class which gets initiated at startup of the gui
     """
     MenuText = translate("Workbench", "Advanced Shapestrings")
-    ToolTip = translate("Workbench", "a simple AdvancedShapestrings")
+    ToolTip = translate("Workbench", "More advanced shapestring tools")
     Icon = get_icon_path("Workbench.svg")
     toolbox = [
         "AdvancedShapestrings_SpacedShapeString",  # SpacedShapeString
@@ -48,12 +48,9 @@ class AdvancedShapestrings(Gui.Workbench):
                                        "of the Draft modules failed, "
                                        "Draft will not work as expected.\n")
 
-        App.Console.PrintMessage(translate(
+        _msg(translate(
             "Log",
-            "Switching to advanced_shapestrings") + "\n")
-        App.Console.PrintMessage(translate(
-            "Log",
-            "Run a numpy function:") + "sqrt(100) = {}\n".format(my_numpy_function.my_foo(100)))
+            "Switching to advanced_shapestrings") + "\n"))
 
         # NOTE: Context for this commands must be "Workbench"
         self.appendToolbar(QT_TRANSLATE_NOOP("Workbench", "Tools"), self.toolbox)

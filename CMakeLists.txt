@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 4.1)
 set(Namespace_SRCS
         freecad/advanced_shapestrings/init_gui.py
         freecad/advanced_shapestrings/__init__.py
-        freecad/advanced_shapestrings/my_numpy_function.py
         freecad/advanced_shapestrings/version.py
         freecad/advanced_shapestrings/resources/Workbench.svg
         freecad/advanced_shapestrings/resources/translations/advanced_shapestrings_es-ES.qm

@@ -63,21 +63,22 @@ class SpacedShapeString(gui_base_original.Creator):
     """Gui command for the SpacedShapeString tool."""
 
     def GetResources(self):
-        """Set icon, menu and tooltip."""
-        d = {
+        """Set icon, menu, and tooltip."""
+        return {
             'Pixmap': get_icon_path("AdvancedShapestrings_SpacedShapeString.svg"),
             'MenuText': QT_TRANSLATE_NOOP(
                 "AdvancedShapestrings_SpacedShapeString",
-                "Spaced shape from text"
+                "Spaced ShapeString"
             ),
             'ToolTip': QT_TRANSLATE_NOOP(
                 "AdvancedShapestrings_SpacedShapeString",
-                "Creates a shape from a list of text strings with configurable spacing "
-                "by choosing a specific font and a placement.\n"
-                "The closed shapes can be used for extrusions and boolean operations."
+                "Creates multiple ShapeStrings from a list of text entries, "
+                "arranged in a line with uniform spacing. "
+                "Spacing can be fixed by insertion point or adjusted for visible gaps "
+                "using each string's bounding box. "
+                "Useful for laying out labels, numbers, or sequential text for Part and PartDesign operations."
             ),
         }
-        return d
 
     def Activated(self):
         """Execute when the command is called."""
