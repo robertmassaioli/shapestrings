@@ -17,7 +17,7 @@ class AdvancedShapestrings(Gui.Workbench):
     """
     MenuText = translate("Workbench", "AdvancedShapestrings")
     ToolTip = translate("Workbench", "a simple AdvancedShapestrings")
-    Icon = get_icon_path("cool.svg")
+    Icon = get_icon_path("Workbench.svg")
     toolbox = [
         "Draft_SpacedShapeString",  # SpacedShapeString
     ]
