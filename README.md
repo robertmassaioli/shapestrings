@@ -1,7 +1,9 @@
 # AdvancedShapestrings (FreeCAD)
 
 ## Overview
+
 AdvancedShapestrings adds a new FreeCAD workbench with additional, or improved, Shapestring commands.
+
 ## SpacedShapeString — what it is and why use it
 
 Icon: 
@@ -39,24 +41,112 @@ The resulting shapes are standard FreeCAD objects that work seamlessly with both
   - **False**: Each string’s insertion point is placed at a fixed offset from the previous string’s insertion point, regardless of character widths.  
   - **True**: The visible gap between the end of one string and the start of the next is kept equal to the offset, using each string’s bounding box to measure its width.
 
-## Using the tool (GUI)
-1. Switch to the Advanced Shapestrings workbench.
-2. Choose the "Spaced shape from text" tool.
+
+## RadialShapeString — what it is and why use it
+
+
+Icon: 
+
+![RadialShapeString icon](./freecad/advanced_shapestrings/resources/icons/AdvancedShapestrings_RadialShapeString.svg)
+
+
+### Screenshot
+
+
+![Radial Shape String Screenshot](./docs/screenshots/radial-shapestring-example.png)
+
+
+### What the Command Does
+
+
+The **RadialShapeString** command lets you create several text strings—such as numbers for a dial or labels around a bolt circle—and place them on a circular arc around a common center point. You control the radius, starting angle, and angular step, so each string lands at a predictable polar position.
+
+Strings can be oriented tangentially to the circle (ideal for gauges and knobs) or kept horizontal for documentation‑style layouts. As with SpacedShapeString, the result is a regular FreeCAD shape object that works with **Part** and **PartDesign** operations for engraving or embossing.
+
+
+### Properties
+
+
+- **Strings**  
+  List of text entries to render, each placed at a different angle around the center.
+
+- **FontFile**  
+  Path to the font file to use (for example, a `.ttf` or `.otf` file).
+
+- **Size**  
+  Height of the rendered text, in model units.
+
+- **Radius**  
+  Distance from the center point to the text baseline.
+
+- **StartAngle**  
+  Angle (in degrees) for the first string. By convention, `0°` lies along the +X axis.
+
+- **AngleStep**  
+  Angular increment (in degrees) between successive strings.
+
+- **Tangential**  
+  When **True**, each string is rotated so its baseline is tangent to the circle; when **False**, all text remains parallel to the global X axis.
+
+- **RotationDirection**  
+  Direction in which angles advance when laying out strings: **CounterClockwise** or **Clockwise**.
+
+- **StringRotation**  
+  Extra rotation angle (in degrees) applied uniformly to every string, after tangential or horizontal alignment.
+
+
+## Using the tools (GUI)
+
+### SpacedShapeString
+1. Switch to the Advanced Shapestrings workbench.  
+2. Choose the "Spaced shape from text" tool.  
 3. In the task panel:
    - Add, edit or remove strings.
    - Select a font file.
    - Set Size and Offset.
    - Optionally set "Use bounding box" to space strings by their width.
-4. Pick the placement point in the 3D view.
+4. Pick the placement point in the 3D view.  
 5. Click OK to create the SpacedShapeString object in the active document.
 
+### RadialShapeString
+1. Switch to the Advanced Shapestrings workbench.  
+2. Choose the "Radial shape from text" tool.  
+3. In the task panel:
+   - Add, edit or remove strings.
+   - Select a font file.
+   - Set Size and Radius.
+   - Adjust Start angle and Angle step.
+   - Choose Tangential on/off, Rotation direction, and optional String rotation.
+4. Pick the center point in the 3D view.  
+5. Click OK to create the RadialShapeString object in the active document.
+
 ## Using from Python (inside FreeCAD)
-Example (run in the FreeCAD Python console with an open document):
+Example (run the following examples in the FreeCAD Python console with an open document).
+
+### Linear Spaced text
 
 ```python
-from freecad.advanced_shapestrings.make import make_spacedshapestring
+from freecad.advanced_shapestrings.make_spacedshapestring import make_spacedshapestring
 
 make_spacedshapestring(["String1", "String2"], "/path/to/font.ttf", Size=10, Offset=5, UseBoundingBox=False)
+```
+
+### Radial Spaced text
+
+```python
+from freecad.advanced_shapestrings.make_radialshapestring import make_radialshapestring
+
+make_radialshapestring(
+    ["1", "2", "3", "4", "5"],
+    "/path/to/font.ttf",
+    Size=4,
+    Radius=50,
+    StartAngle=0,
+    AngleStep=30,
+    Tangential=True,
+    RotationDirection="CounterClockwise",
+    StringRotation=0,
+)
 ```
 
 ## Installation
