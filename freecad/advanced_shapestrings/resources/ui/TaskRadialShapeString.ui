@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DraftRadialShapeStringGui</class>
+ <widget class="QWidget" name="DraftRadialShapeStringGui">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>445</width>
+    <height>580</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>250</width>
+    <height>0</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>RadialShapeString</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+
+   <!-- Center point + height -->
+   <item row="0" column="0">
+    <layout class="QGridLayout" name="gridLayout_7">
+     <item row="0" column="0">
+      <widget class="QLabel" name="labelX">
+       <property name="text">
+        <string>X</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="Gui::QuantitySpinBox" name="sbX">
+       <property name="toolTip">
+        <string>Enter center coordinates or pick a point with the mouse</string>
+       </property>
+       <property name="unit" stdset="0">
+        <string notr="true">mm</string>
+       </property>
+      </widget>
+     </item>
+
+     <item row="1" column="0">
+      <widget class="QLabel" name="labelY">
+       <property name="text">
+        <string>Y</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="Gui::QuantitySpinBox" name="sbY">
+       <property name="toolTip">
+        <string>Enter center coordinates or pick a point with the mouse</string>
+       </property>
+       <property name="unit" stdset="0">
+        <string notr="true">mm</string>
+       </property>
+      </widget>
+     </item>
+
+     <item row="2" column="0">
+      <widget class="QLabel" name="labelZ">
+       <property name="text">
+        <string>Z</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="Gui::QuantitySpinBox" name="sbZ">
+       <property name="toolTip">
+        <string>Enter center coordinates or pick a point with the mouse</string>
+       </property>
+       <property name="unit" stdset="0">
+        <string notr="true">mm</string>
+       </property>
+      </widget>
+     </item>
+
+     <item row="3" column="0">
+      <widget class="QCheckBox" name="cbGlobalMode">
+       <property name="toolTip">
+        <string>Coordinates relative to global coordinate system.
+Uncheck to use working plane coordinate system</string>
+       </property>
+       <property name="text">
+        <string>Global</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QPushButton" name="pbReset">
+       <property name="toolTip">
+        <string>Resets the picked center point</string>
+       </property>
+       <property name="statusTip">
+        <string/>
+       </property>
+       <property name="text">
+        <string>Reset Center</string>
+       </property>
+      </widget>
+     </item>
+
+     <item row="4" column="0">
+      <widget class="QLabel" name="labelHeight">
+       <property name="text">
+        <string>Height</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="Gui::QuantitySpinBox" name="sbHeight">
+       <property name="toolTip">
+        <string>Height of the text</string>
+       </property>
+       <property name="unit" stdset="0">
+        <string notr="true">mm</string>
+       </property>
+       <property name="minimum">
+        <double>0.000000000000000</double>
+       </property>
+       <property name="value">
+        <double>10.000000000000000</double>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+
+   <!-- Text + radius + angular parameters + font -->
+   <item row="1" column="0">
+    <layout class="QGridLayout" name="gridLayout_6">
+
+     <item row="0" column="0">
+      <widget class="QLabel" name="labelStrings">
+       <property name="text">
+        <string>Strings</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QListWidget" name="listStrings">
+       <property name="toolTip">
+        <string>List of text strings to render. Double-click to edit.</string>
+       </property>
+      </widget>
+     </item>
+
+     <!-- Add/Remove buttons -->
+     <item row="1" column="1">
+      <layout class="QHBoxLayout" name="layoutStringButtons">
+       <item>
+        <widget class="QPushButton" name="pbAddString">
+         <property name="text">
+          <string>Add</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pbRemoveString">
+         <property name="text">
+          <string>Remove</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+
+     <!-- RADIUS moved here, above Start angle -->
+     <item row="2" column="0">
+      <widget class="QLabel" name="labelRadius">
+       <property name="text">
+        <string>Radius</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="Gui::QuantitySpinBox" name="sbRadius">
+       <property name="toolTip">
+        <string>Distance from center to text baseline</string>
+       </property>
+       <property name="unit" stdset="0">
+        <string notr="true">mm</string>
+       </property>
+       <property name="minimum">
+        <double>0.000000000000000</double>
+       </property>
+       <property name="value">
+        <double>50.000000000000000</double>
+       </property>
+      </widget>
+     </item>
+
+     <item row="3" column="0">
+      <widget class="QLabel" name="labelStartAngle">
+       <property name="text">
+        <string>Start angle</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="Gui::QuantitySpinBox" name="sbStartAngle">
+       <property name="toolTip">
+        <string>Starting angle for the first string (0° = +X axis)</string>
+       </property>
+       <property name="unit" stdset="0">
+        <string notr="true">deg</string>
+       </property>
+       <property name="minimum">
+        <double>0.000000000000000</double>
+       </property>
+       <property name="maximum">
+        <double>360.000000000000000</double>
+       </property>
+       <property name="value">
+        <double>0.000000000000000</double>
+       </property>
+      </widget>
+     </item>
+
+     <item row="4" column="0">
+      <widget class="QLabel" name="labelAngleStep">
+       <property name="text">
+        <string>Angle step</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="Gui::QuantitySpinBox" name="sbAngleStep">
+       <property name="toolTip">
+        <string>Angular increment between successive strings</string>
+       </property>
+       <property name="unit" stdset="0">
+        <string notr="true">deg</string>
+       </property>
+       <property name="minimum">
+        <double>0.000000000000000</double>
+       </property>
+       <property name="maximum">
+        <double>360.000000000000000</double>
+       </property>
+       <property name="value">
+        <double>30.000000000000000</double>
+       </property>
+      </widget>
+     </item>
+
+     <item row="5" column="0" colspan="2">
+      <widget class="QCheckBox" name="cbTangential">
+       <property name="toolTip">
+        <string>Rotate each string so its baseline is tangent to the arc.
+Uncheck to keep text baseline parallel to the X axis.</string>
+       </property>
+       <property name="text">
+        <string>Tangential to arc</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+
+     <item row="6" column="0">
+      <widget class="QLabel" name="labelFontFile">
+       <property name="text">
+        <string>Font file</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="1">
+      <widget class="Gui::FileChooser" name="fcFontFile">
+       <property name="filter">
+        <string>Font files (*.ttc *.ttf *.otf *.pfb *.TTC *.TTF *.OTF *.PFB)</string>
+       </property>
+      </widget>
+     </item>
+
+    </layout>
+   </item>
+
+   <item row="2" column="0">
+    <spacer name="verticalSpacer_1">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+
+ <customwidgets>
+  <customwidget>
+   <class>Gui::FileChooser</class>
+   <extends>QWidget</extends>
+   <header>Gui/FileDialog.h</header>
+  </customwidget>
+  <customwidget>
+   <class>Gui::QuantitySpinBox</class>
+   <extends>QWidget</extends>
+   <header>Gui/QuantitySpinBox.h</header>
+  </customwidget>
+ </customwidgets>
+ <connections/>
+</ui>
