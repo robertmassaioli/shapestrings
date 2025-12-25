@@ -67,6 +67,8 @@ class RadialShapeStringTaskPanel:
                  start_angle=0.0,
                  angle_step=30.0,
                  tangential=True,
+                 rotation_direction="CounterClockwise",
+                 string_rotation=0.0,
                  font=""):
 
         if strings is None:
@@ -122,6 +124,18 @@ class RadialShapeStringTaskPanel:
 
         # Tangential checkbox
         self.form.cbTangential.setChecked(bool(tangential))
+
+        # Rotation direction combo
+        self.form.cbRotationDirection.clear()
+        self.form.cbRotationDirection.addItem("CounterClockwise")
+        self.form.cbRotationDirection.addItem("Clockwise")
+        self.form.cbRotationDirection.setCurrentIndex(
+            0 if rotation_direction == "CounterClockwise" else 1
+        )
+
+        # String rotation
+        self.form.sbStringRotation.setProperty("rawValue", string_rotation)
+        self.form.sbStringRotation.setProperty("unit", unit_angle)
 
         # Platform dialog setup
         self.platWinDialog("Overwrite")
@@ -316,6 +330,16 @@ class RadialShapeStringTaskPanelCmd(RadialShapeStringTaskPanel):
         AngleStep = str(App.Units.Quantity(self.form.sbAngleStep.text()).Value)
         Tangential = str(bool(self.form.cbTangential.isChecked()))
 
+        # Rotation direction from combo box
+        idx = self.form.cbRotationDirection.currentIndex()
+        rotation_direction = (
+            "CounterClockwise" if idx == 0 else "Clockwise"
+        )
+
+        # String rotation
+        StringRotation = str(App.Units.Quantity(self.form.sbStringRotation.text()).Value)
+
+
         # Base point (center)
         x = App.Units.Quantity(self.form.sbX.text()).Value
         y = App.Units.Quantity(self.form.sbY.text()).Value
@@ -333,7 +357,9 @@ class RadialShapeStringTaskPanelCmd(RadialShapeStringTaskPanel):
                     f"Strings={string_list_expr}, "
                     f"FontFile={FFile}, Size={Size}, "
                     f"Radius={Radius}, StartAngle={StartAngle}, "
-                    f"AngleStep={AngleStep}, Tangential={Tangential})"
+                    f"AngleStep={AngleStep}, Tangential={Tangential}, "
+                    f"RotationDirection='{rotation_direction}', "
+                    f"StringRotation={StringRotation})"
                 ),
                 "plm = FreeCAD.Placement()",
                 f"plm.Base = {toString(center)}",
@@ -366,6 +392,8 @@ class RadialShapeStringTaskPanelEdit(RadialShapeStringTaskPanel):
         angle_step = float(obj.AngleStep)
         tangential = bool(getattr(obj, "Tangential", True))
         font = obj.FontFile
+        rotation_direction = getattr(obj, "RotationDirection", "CounterClockwise")
+        string_rotation = float(getattr(obj, "StringRotation", 0.0))
 
         super().__init__(
             point=base,
@@ -375,8 +403,11 @@ class RadialShapeStringTaskPanelEdit(RadialShapeStringTaskPanel):
             start_angle=start_angle,
             angle_step=angle_step,
             tangential=tangential,
+            rotation_direction=rotation_direction,
+            string_rotation=string_rotation,
             font=font,
         )
+
 
         self.pointPicked = True
         self.vobj = vobj
@@ -397,6 +428,12 @@ class RadialShapeStringTaskPanelEdit(RadialShapeStringTaskPanel):
         angle_step = App.Units.Quantity(self.form.sbAngleStep.text()).Value
         tangential = bool(self.form.cbTangential.isChecked())
         font_file = self.fileSpec
+        rotation_direction = (
+            "CounterClockwise"
+            if self.form.cbRotationDirection.currentIndex() == 0
+            else "Clockwise"
+        )
+        string_rotation = App.Units.Quantity(self.form.sbStringRotation.text()).Value
 
         o = 'FreeCAD.ActiveDocument.getObject("{}")'.format(self.vobj.Object.Name)
         Gui.doCommand(o + ".Placement.Base=" + toString(base))
@@ -407,6 +444,8 @@ class RadialShapeStringTaskPanelEdit(RadialShapeStringTaskPanel):
         Gui.doCommand(o + ".AngleStep=" + str(angle_step))
         Gui.doCommand(o + ".Tangential=" + str(tangential))
         Gui.doCommand(o + '.FontFile="' + font_file + '"')
+        Gui.doCommand(o + ".RotationDirection=" + repr(rotation_direction))
+        Gui.doCommand(o + ".StringRotation=" + str(string_rotation))
         Gui.doCommand("FreeCAD.ActiveDocument.recompute()")
 
         if not hasattr(self, "_adv_params"):

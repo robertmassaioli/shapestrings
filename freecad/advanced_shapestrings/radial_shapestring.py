@@ -99,7 +99,10 @@ class RadialShapeString(DraftObject):
             obj.addProperty("App::PropertyLength", "Size", "Draft", _tip)
 
         if "Justification" not in properties:
-            _tip = QT_TRANSLATE_NOOP("App::Property", "Horizontal and vertical alignment")
+            _tip = QT_TRANSLATE_NOOP(
+                "App::Property",
+                "Horizontal and vertical alignment",
+            )
             obj.addProperty("App::PropertyEnumeration", "Justification", "Draft", _tip)
             obj.Justification = [
                 "Top-Left",
@@ -164,6 +167,28 @@ class RadialShapeString(DraftObject):
             )
             obj.addProperty("App::PropertyBool", "Fuse", "Draft", _tip)
             obj.Fuse = False
+
+        if "RotationDirection" not in properties:
+            _tip = QT_TRANSLATE_NOOP(
+                "App::Property",
+                "Direction to step angles when placing strings",
+            )
+            obj.addProperty(
+                "App::PropertyEnumeration",
+                "RotationDirection",
+                "Draft",
+                _tip,
+            )
+            obj.RotationDirection = ["CounterClockwise", "Clockwise"]
+            obj.RotationDirection = "CounterClockwise"
+
+        if "StringRotation" not in properties:
+            _tip = QT_TRANSLATE_NOOP(
+                "App::Property",
+                "Extra rotation angle applied uniformly to every string",
+            )
+            obj.addProperty("App::PropertyAngle", "StringRotation", "Draft", _tip)
+            obj.StringRotation = 0.0
 
     def onDocumentRestored(self, obj):
         super().onDocumentRestored(obj)
@@ -249,7 +274,7 @@ class RadialShapeString(DraftObject):
                             )
                             + "\n"
                         )
-                        App.Console.PrintWarning(wrn)
+                        _wrn(wrn)
 
                 # Apply justification
                 just_vec = self.justification_vector(
@@ -263,10 +288,19 @@ class RadialShapeString(DraftObject):
                 for shape in shapes:
                     shape.translate(just_vec)
 
+                # Determine direction sign: +1 = CCW, -1 = CW
+                try:
+                    if obj.RotationDirection == "Clockwise":
+                        direction = -1.0
+                    else:
+                        direction = 1.0
+                except Exception:
+                    direction = 1.0
+
+                step = float(obj.AngleStep) * direction
+
                 # Compute radial position for this string
-                angle_deg = float(obj.StartAngle) + string_index * float(
-                    obj.AngleStep
-                )
+                angle_deg = float(obj.StartAngle) + string_index * step
                 angle_rad = math.radians(angle_deg)
 
                 # Radius is an App::PropertyLength, ensure we use value in mm
@@ -277,13 +311,20 @@ class RadialShapeString(DraftObject):
                 cy = radius_val * math.sin(angle_rad)
                 offset_vec = App.Vector(cx, cy, 0)
 
+                # Extra per-string rotation
+                extra_rot = float(getattr(obj, "StringRotation", 0.0))
+
                 # Apply tangent or horizontal orientation
                 if obj.Tangential:
-                    # Tangent direction is angle + 90 degrees
-                    rot_deg = angle_deg + 90.0
+                    # Tangent direction pointing toward the center:
+                    # radial angle + 180° is inward; minus 90° for baseline.
+                    rot_deg = angle_deg + 180.0 - 90.0
                 else:
                     # Baseline kept parallel to global X axis
                     rot_deg = 0.0
+
+                # Apply global string rotation offset
+                rot_deg += extra_rot
 
                 # Apply placement: we rotate and translate all shapes
                 m = App.Matrix()
@@ -307,7 +348,7 @@ class RadialShapeString(DraftObject):
             if all_shapes:
                 obj.Shape = Part.Compound(all_shapes)
             else:
-                App.Console.PrintWarning(
+                _wrn(
                     translate("draft", "RadialShapeString: strings have no wires")
                     + "\n"
                 )
@@ -368,31 +409,25 @@ class RadialShapeString(DraftObject):
                 wirelist.append(compEdges.Wires[0])
 
         if not wirelist:
-            App.Console.PrintWarning(wrn)
+            _wrn(wrn)
             return []
 
         try:
-            faces_list = Part.makeFace(
-                wirelist, "Part::FaceMakerBullseye"
-            ).Faces
+            faces_list = Part.makeFace(wirelist, "Part::FaceMakerBullseye").Faces
             for face in faces_list:
                 face.validate()
         except Part.OCCError:
             try:
-                faces_list = Part.makeFace(
-                    wirelist, "Part::FaceMakerCheese"
-                ).Faces
+                faces_list = Part.makeFace(wirelist, "Part::FaceMakerCheese").Faces
                 for face in faces_list:
                     face.validate()
             except Part.OCCError:
                 try:
-                    faces_list = Part.makeFace(
-                        wirelist, "Part::FaceMakerSimple"
-                    ).Faces
+                    faces_list = Part.makeFace(wirelist, "Part::FaceMakerSimple").Faces
                     for face in faces_list:
                         face.validate()
                 except Part.OCCError:
-                    App.Console.PrintWarning(wrn)
+                    _wrn(wrn)
                     return []
 
         for face in faces_list:

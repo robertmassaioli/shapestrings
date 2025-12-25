@@ -41,7 +41,9 @@ def make_radialshapestring(Strings,
                            Radius=50,
                            StartAngle=0,
                            AngleStep=30,
-                           Tangential=True):
+                           Tangential=True,
+                           RotationDirection="CounterClockwise",
+                           StringRotation=0):
     """RadialShapeString(Strings, FontFile,
                          [Size], [Radius], [StartAngle], [AngleStep], [Tangential])
 
@@ -75,6 +77,8 @@ def make_radialshapestring(Strings,
     obj.StartAngle = StartAngle
     obj.AngleStep = AngleStep
     obj.Tangential = bool(Tangential)
+    obj.RotationDirection = str(RotationDirection)
+    obj.StringRotation = StringRotation
 
     # Print all object properties to the FreeCAD console
     App.Console.PrintMessage("RadialShapeString properties:\n")

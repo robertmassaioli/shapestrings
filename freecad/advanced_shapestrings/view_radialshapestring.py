@@ -47,6 +47,8 @@ class ViewProviderRadialShapeString(ViewProviderDraft):
             or prop == "StartAngle"
             or prop == "AngleStep"
             or prop == "Tangential"
+            or prop == "RotationDirection"  
+            or prop == "StringRotation"      
         ):
             obj.recompute()
         return
