@@ -1,0 +1,431 @@
+# ***************************************************************************
+# *   Copyright (c) 2025 Robert Massaioli                                   *
+# *                                                                         *
+# *   This program is free software; you can redistribute it and/or modify  *
+# *   it under the terms of the GNU Lesser General Public License (LGPL)    *
+# *   as published by the Free Software Foundation; either version 2 of     *
+# *   the License, or (at your option) any later version.                   *
+# *   for detail see the LICENCE text file.                                 *
+# *                                                                         *
+# *   This program is distributed in the hope that it will be useful,       *
+# *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+# *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+# *   GNU Library General Public License for more details.                  *
+# *                                                                         *
+# *   You should have received a copy of the GNU Library General Public     *
+# *   License along with this program; if not, write to the Free Software   *
+# *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
+# *   USA                                                                   *
+# *                                                                         *
+# ***************************************************************************
+
+
+"""Provides the task panel code for the Draft RadialShapeString tool."""
+
+
+## @package task_radialshapestring
+# \ingroup drafttaskpanels
+# \brief Provides the task panel code for the Draft RadialShapeString tool.
+## \addtogroup drafttaskpanels
+# @{
+
+
+import traceback
+import PySide.QtCore as QtCore
+import PySide.QtGui as QtGui
+
+import FreeCAD as App
+import FreeCADGui as Gui
+
+import Draft_rc
+
+from draftguitools import gui_tool_utils
+from draftutils.messages import _err, _msg
+from draftutils.params import get_param
+from draftutils.translate import translate
+from DraftVecUtils import toString
+
+from .paths import get_icon_path, get_ui_path
+
+
+# So the resource file doesn't trigger errors from code checkers (flake8)
+True if Draft_rc.__name__ else False
+
+
+# Parameter groups for preferences
+ADV_PARAM_GROUP = "User parameter:BaseApp/Preferences/Mod/AdvancedShapestring"
+
+
+class RadialShapeStringTaskPanel:
+    """Base class for AdvancedShapestrings_RadialShapeString task panel."""
+
+    def __init__(self,
+                 point=App.Vector(0, 0, 0),
+                 size=10,
+                 strings=None,
+                 radius=50.0,
+                 start_angle=0.0,
+                 angle_step=30.0,
+                 tangential=True,
+                 font=""):
+
+        if strings is None:
+            strings = []
+
+        # Load custom UI for radial shapestring
+        self.form = Gui.PySideUic.loadUi(get_ui_path("TaskRadialShapeString.ui"))
+        self.form.setObjectName("RadialShapeStringTaskPanel")
+        self.form.setWindowTitle(translate("draft", "RadialShapeString"))
+        self.form.setWindowIcon(
+            QtGui.QIcon(get_icon_path("AdvancedShapestrings_RadialShapeString.svg"))
+        )
+
+        unit_length = App.Units.Quantity(0.0, App.Units.Length).getUserPreferred()[2]
+        unit_angle = App.Units.Quantity(0.0, App.Units.Angle).getUserPreferred()[2]
+
+        # Center point
+        self.form.sbX.setProperty("rawValue", point.x)
+        self.form.sbX.setProperty("unit", unit_length)
+        self.form.sbY.setProperty("rawValue", point.y)
+        self.form.sbY.setProperty("unit", unit_length)
+        self.form.sbZ.setProperty("rawValue", point.z)
+        self.form.sbZ.setProperty("unit", unit_length)
+
+        # Text height
+        self.form.sbHeight.setProperty("rawValue", size)
+        self.form.sbHeight.setProperty("unit", unit_length)
+
+        # Strings list
+        list_widget = self.form.listStrings
+        list_widget.clear()
+        if strings:
+            for s in strings:
+                item = QtGui.QListWidgetItem(s)
+                item.setFlags(item.flags() | QtCore.Qt.ItemIsEditable)
+                list_widget.addItem(item)
+        else:
+            item = QtGui.QListWidgetItem(translate("draft", "Default"))
+            item.setFlags(item.flags() | QtCore.Qt.ItemIsEditable)
+            list_widget.addItem(item)
+
+        # Radius
+        self.form.sbRadius.setProperty("rawValue", radius)
+        self.form.sbRadius.setProperty("unit", unit_length)
+
+        # Start angle
+        self.form.sbStartAngle.setProperty("rawValue", start_angle)
+        self.form.sbStartAngle.setProperty("unit", unit_angle)
+
+        # Angle step
+        self.form.sbAngleStep.setProperty("rawValue", angle_step)
+        self.form.sbAngleStep.setProperty("unit", unit_angle)
+
+        # Tangential checkbox
+        self.form.cbTangential.setChecked(bool(tangential))
+
+        # Platform dialog setup
+        self.platWinDialog("Overwrite")
+
+        # Parameter groups
+        self._adv_params = App.ParamGet(ADV_PARAM_GROUP)
+
+        # Font file: AdvancedShapestring default → Draft default → explicit arg → empty
+        if font:
+            self.fileSpec = font
+        else:
+            adv_font = self._adv_params.GetString("FontFile", "")
+            if adv_font:
+                self.fileSpec = adv_font
+            else:
+                self.fileSpec = get_param("FontFile") or ""
+
+        self.form.fcFontFile.setFileName(self.fileSpec)
+
+        self.point = point
+        self.pointPicked = False
+
+        # Default for the "DontUseNativeFontDialog" preference:
+        self.font_dialog_pref = False
+
+        # Dummy attribute used by gui_tool_utils.getPoint in action method
+        self.node = None
+
+        QtCore.QObject.connect(
+            self.form.fcFontFile,
+            QtCore.SIGNAL("fileNameSelected(const QString&)"),
+            self.fileSelect,
+        )
+
+        QtCore.QObject.connect(
+            self.form.pbReset,
+            QtCore.SIGNAL("clicked()"),
+            self.resetPoint,
+        )
+
+        # Connect Add/Remove buttons for strings
+        QtCore.QObject.connect(
+            self.form.pbAddString,
+            QtCore.SIGNAL("clicked()"),
+            self.addStringItem,
+        )
+        QtCore.QObject.connect(
+            self.form.pbRemoveString,
+            QtCore.SIGNAL("clicked()"),
+            self.removeStringItem,
+        )
+
+        self.updateRemoveButtonState()
+
+    def fileSelect(self, fn):
+        """Assign the selected font file and remember it as default."""
+        self.fileSpec = fn
+        if not hasattr(self, "_adv_params"):
+            self._adv_params = App.ParamGet(ADV_PARAM_GROUP)
+        self._adv_params.SetString("FontFile", str(fn))
+
+    def resetPoint(self):
+        """Reset the selected center point to origin."""
+        self.pointPicked = False
+        origin = App.Vector(0.0, 0.0, 0.0)
+        self.setPoint(origin)
+
+    def _createEditableItem(self, text):
+        """Create an editable QListWidgetItem with the given text."""
+        item = QtGui.QListWidgetItem(text)
+        item.setFlags(item.flags() | QtCore.Qt.ItemIsEditable)
+        return item
+
+    def addStringItem(self):
+        """Add a new editable entry to listStrings."""
+        list_widget = self.form.listStrings
+        item = self._createEditableItem(translate("draft", "New string"))
+        list_widget.addItem(item)
+        list_widget.setCurrentItem(item)
+        list_widget.editItem(item)
+        self.updateRemoveButtonState()
+
+    def removeStringItem(self):
+        """Remove the currently selected entry from listStrings if more than one."""
+        list_widget = self.form.listStrings
+        count = list_widget.count()
+        if count <= 1:
+            return
+
+        current_row = list_widget.currentRow()
+        if current_row < 0:
+            current_row = count - 1
+        item = list_widget.takeItem(current_row)
+        del item
+        self.updateRemoveButtonState()
+
+    def collectStrings(self):
+        """Read strings from the listStrings widget, one row per string."""
+        items = []
+        list_widget = self.form.listStrings
+        for i in range(list_widget.count()):
+            text = list_widget.item(i).text().strip()
+            if text:
+                items.append(text)
+        return items
+
+    def updateRemoveButtonState(self):
+        """Enable/disable the Remove button depending on the number of items."""
+        list_widget = self.form.listStrings
+        can_remove = list_widget.count() > 1
+        self.form.pbRemoveString.setEnabled(can_remove)
+
+    def action(self, arg):
+        """Scene event handler."""
+        if arg["Type"] == "SoKeyboardEvent":
+            if arg["Key"] == "ESCAPE":
+                self.reject()
+        elif arg["Type"] == "SoLocation2Event":
+            self.point, ctrlPoint, info = gui_tool_utils.getPoint(
+                self, arg, noTracker=True
+            )
+            if not self.pointPicked:
+                self.setPoint(self.point)
+        elif arg["Type"] == "SoMouseButtonEvent":
+            if (arg["State"] == "DOWN") and (arg["Button"] == "BUTTON1"):
+                self.setPoint(self.point)
+                self.pointPicked = True
+
+    def setPoint(self, point):
+        """Assign the selected center point."""
+        self.form.sbX.setProperty("rawValue", point.x)
+        self.form.sbY.setProperty("rawValue", point.y)
+        self.form.sbZ.setProperty("rawValue", point.z)
+
+    def platWinDialog(self, flag):
+        """Handle the type of dialog depending on the platform."""
+        ParamGroup = App.ParamGet("User parameter:BaseApp/Preferences/Dialog")
+
+        if flag == "Overwrite":
+            if "DontUseNativeFontDialog" not in ParamGroup.GetBools():
+                ParamGroup.SetBool("DontUseNativeFontDialog", True)
+            param = ParamGroup.GetBool("DontUseNativeFontDialog")
+            self.font_dialog_pref = ParamGroup.GetBool("DontUseNativeDialog")
+            ParamGroup.SetBool("DontUseNativeDialog", param)
+
+        elif flag == "Restore":
+            ParamGroup.SetBool("DontUseNativeDialog", self.font_dialog_pref)
+
+
+class RadialShapeStringTaskPanelCmd(RadialShapeStringTaskPanel):
+    """Task panel for AdvancedShapestrings_RadialShapeString (command mode)."""
+
+    def __init__(self, sourceCmd):
+        super().__init__()
+        self.sourceCmd = sourceCmd
+
+    def accept(self):
+        """Execute when clicking the OK button."""
+        if not hasattr(self, "_adv_params"):
+            self._adv_params = App.ParamGet(ADV_PARAM_GROUP)
+        self._adv_params.SetString("FontFile", str(self.fileSpec))
+
+        self.createObject()
+        self.reject()
+        return True
+
+    def reject(self):
+        """Run when clicking the Cancel button."""
+        Gui.ActiveDocument.resetEdit()
+        self.sourceCmd.finish()
+        self.platWinDialog("Restore")
+        return True
+
+    def createObject(self):
+        """Create RadialShapeString object in the current document."""
+
+        # Strings
+        strings = self.collectStrings()
+        string_list_expr = "[" + ", ".join(
+            ['"' + s.replace("\\", "\\\\").replace('"', '\\"') + '"' for s in strings]
+        ) + "]"
+
+        # Font file
+        FFile = '"' + str(self.fileSpec) + '"'
+
+        # Size
+        Size = str(App.Units.Quantity(self.form.sbHeight.text()).Value)
+
+        # Radius and angles
+        Radius = str(App.Units.Quantity(self.form.sbRadius.text()).Value)
+        StartAngle = str(App.Units.Quantity(self.form.sbStartAngle.text()).Value)
+        AngleStep = str(App.Units.Quantity(self.form.sbAngleStep.text()).Value)
+        Tangential = str(bool(self.form.cbTangential.isChecked()))
+
+        # Base point (center)
+        x = App.Units.Quantity(self.form.sbX.text()).Value
+        y = App.Units.Quantity(self.form.sbY.text()).Value
+        z = App.Units.Quantity(self.form.sbZ.text()).Value
+        center = App.Vector(x, y, z)
+
+        try:
+            qr, sup, points, fil = self.sourceCmd.getStrings()
+            c = "freecad.advanced_shapestrings"
+            Gui.addModule("Draft")
+            Gui.addModule(f"{c}.AdvancedShapestring")
+            commands = [
+                (
+                    f"rs = {c}.AdvancedShapestring.make_radialshapestring("
+                    f"Strings={string_list_expr}, "
+                    f"FontFile={FFile}, Size={Size}, "
+                    f"Radius={Radius}, StartAngle={StartAngle}, "
+                    f"AngleStep={AngleStep}, Tangential={Tangential})"
+                ),
+                "plm = FreeCAD.Placement()",
+                f"plm.Base = {toString(center)}",
+                f"plm.Rotation.Q = {qr}",
+                "rs.Placement = plm",
+                f"rs.AttachmentSupport = {sup}",
+                "Draft.autogroup(rs)",
+                "FreeCAD.ActiveDocument.recompute()",
+            ]
+            _msg("RadialShapeString commit commands:\n" + "\n".join(commands))
+            self.sourceCmd.commit(
+                translate("draft", "Create RadialShapeString"), commands
+            )
+        except Exception:
+            _err("AdvancedShapestrings_RadialShapeString: error delaying commit\n")
+            traceback.print_exc()
+
+
+class RadialShapeStringTaskPanelEdit(RadialShapeStringTaskPanel):
+    """Task panel for Draft RadialShapeString object in edit mode."""
+
+    def __init__(self, vobj):
+        obj = vobj.Object
+
+        base = obj.Placement.Base
+        size = obj.Size.Value
+        strings = list(obj.Strings)
+        radius = obj.Radius.Value
+        start_angle = float(obj.StartAngle)
+        angle_step = float(obj.AngleStep)
+        tangential = bool(getattr(obj, "Tangential", True))
+        font = obj.FontFile
+
+        super().__init__(
+            point=base,
+            size=size,
+            strings=strings,
+            radius=radius,
+            start_angle=start_angle,
+            angle_step=angle_step,
+            tangential=tangential,
+            font=font,
+        )
+
+        self.pointPicked = True
+        self.vobj = vobj
+        self.call = Gui.activeView().addEventCallback("SoEvent", self.action)
+
+    def accept(self):
+        # Center point
+        x = App.Units.Quantity(self.form.sbX.text()).Value
+        y = App.Units.Quantity(self.form.sbY.text()).Value
+        z = App.Units.Quantity(self.form.sbZ.text()).Value
+        base = App.Vector(x, y, z)
+
+        # Parameters
+        size = App.Units.Quantity(self.form.sbHeight.text()).Value
+        strings = self.collectStrings()
+        radius = App.Units.Quantity(self.form.sbRadius.text()).Value
+        start_angle = App.Units.Quantity(self.form.sbStartAngle.text()).Value
+        angle_step = App.Units.Quantity(self.form.sbAngleStep.text()).Value
+        tangential = bool(self.form.cbTangential.isChecked())
+        font_file = self.fileSpec
+
+        o = 'FreeCAD.ActiveDocument.getObject("{}")'.format(self.vobj.Object.Name)
+        Gui.doCommand(o + ".Placement.Base=" + toString(base))
+        Gui.doCommand(o + ".Size=" + str(size))
+        Gui.doCommand(o + ".Strings=" + repr(strings))
+        Gui.doCommand(o + ".Radius=" + str(radius))
+        Gui.doCommand(o + ".StartAngle=" + str(start_angle))
+        Gui.doCommand(o + ".AngleStep=" + str(angle_step))
+        Gui.doCommand(o + ".Tangential=" + str(tangential))
+        Gui.doCommand(o + '.FontFile="' + font_file + '"')
+        Gui.doCommand("FreeCAD.ActiveDocument.recompute()")
+
+        if not hasattr(self, "_adv_params"):
+            self._adv_params = App.ParamGet(ADV_PARAM_GROUP)
+        self._adv_params.SetString("FontFile", str(font_file))
+
+        self.reject()
+        return True
+
+    def reject(self):
+        self.vobj.Document.resetEdit()
+        self.platWinDialog("Restore")
+        return True
+
+    def finish(self):
+        Gui.activeView().removeEventCallback("SoEvent", self.call)
+        Gui.Snapper.off()
+        Gui.Control.closeDialog()
+        return None
+
+
+## @}

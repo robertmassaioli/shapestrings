@@ -1,0 +1,75 @@
+# ***************************************************************************
+# *   Copyright (c) 2025 Robert Massaioli                                   *
+# *                                                                         *
+# *   This program is free software; you can redistribute it and/or modify  *
+# *   it under the terms of the GNU Lesser General Public License (LGPL)    *
+# *   as published by the Free Software Foundation; either version 2 of     *
+# *   the License, or (at your option) any later version.                   *
+# *   for detail see the LICENCE text file.                                 *
+# *                                                                         *
+# *   This program is distributed in the hope that it will be useful,       *
+# *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+# *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+# *   GNU Library General Public License for more details.                  *
+# *                                                                         *
+# *   You should have received a copy of the GNU Library General Public     *
+# *   License along with this program; if not, write to the Free Software   *
+# *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
+# *   USA                                                                   *
+# *                                                                         *
+# ***************************************************************************
+
+
+"""Provides the viewprovider code for the RadialShapeString object."""
+
+
+import FreeCADGui as Gui
+
+from draftviewproviders.view_base import ViewProviderDraft
+from .task_radialshapestring import RadialShapeStringTaskPanelEdit
+from .paths import get_icon_path
+
+
+class ViewProviderRadialShapeString(ViewProviderDraft):
+
+    def __init__(self, vobj):
+        vobj.Proxy = self
+
+    def getIcon(self):
+        return get_icon_path("AdvancedShapestrings_RadialShapeString.svg")
+
+    def updateData(self, obj, prop):
+        if (
+            prop == "Strings"
+            or prop == "FontFile"
+            or prop == "Size"
+            or prop == "Radius"
+            or prop == "StartAngle"
+            or prop == "AngleStep"
+            or prop == "Tangential"
+        ):
+            obj.recompute()
+        return
+
+    def setEdit(self, vobj, mode):
+        if mode != 0:
+            return None
+
+        # Using Draft_Edit to detect if the Draft, Arch or BIM WB has been loaded.
+        if "Draft_Edit" not in Gui.listCommands():
+            self.wb_before_edit = Gui.activeWorkbench()
+            Gui.activateWorkbench("DraftWorkbench")
+
+        self.task = RadialShapeStringTaskPanelEdit(vobj)
+        Gui.Control.showDialog(self.task)
+        return True
+
+    def unsetEdit(self, vobj, mode):
+        if mode != 0:
+            return None
+
+        self.task.finish()
+        if hasattr(self, "wb_before_edit"):
+            Gui.activateWorkbench(self.wb_before_edit.name())
+            delattr(self, "wb_before_edit")
+        return True

@@ -1,2 +1,3 @@
 
-from .gui_spaced_shapestrings import SpacedShapeString
+from .gui_spacedshapestring import SpacedShapeString
+from .gui_radialshapestring import RadialShapeString
