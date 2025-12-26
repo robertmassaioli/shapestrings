@@ -22,31 +22,38 @@
 #                                                                              #
 ################################################################################
 
-"""Provides the viewprovider code for the SpacedShapeString object."""
+
+"""Provides the viewprovider code for the RadialShapeString object."""
 
 
 import FreeCADGui as Gui
 
 from draftviewproviders.view_base import ViewProviderDraft
-from .Dialogs import SpacedShapeStringTaskPanelEdit
-from .paths import get_icon_path
+from ..Dialogs import RadialShapeStringTaskPanelEdit
+from ..paths import get_icon_path
 
-class ViewProviderSpacedShapeString(ViewProviderDraft):
+
+class ViewProviderRadialShapeString(ViewProviderDraft):
 
     def __init__(self, vobj):
         vobj.Proxy = self
 
     def getIcon(self):
-        return get_icon_path("AdvancedShapestrings_SpacedShapeString.svg")
+        return get_icon_path("AdvancedShapestrings_RadialShapeString.svg")
 
     def updateData(self, obj, prop):
-        if (prop == "Strings" or
-            prop == "FontFile" or
-            prop == "Size" or
-            prop == "Offset" or
-            prop == "UseBoundingBox"):
+        if (
+            prop == "Strings"
+            or prop == "FontFile"
+            or prop == "Size"
+            or prop == "Radius"
+            or prop == "StartAngle"
+            or prop == "AngleStep"
+            or prop == "Tangential"
+            or prop == "RotationDirection"
+            or prop == "StringRotation"
+        ):
             obj.recompute()
-
         return
 
     def setEdit(self, vobj, mode):
@@ -58,7 +65,7 @@ class ViewProviderSpacedShapeString(ViewProviderDraft):
             self.wb_before_edit = Gui.activeWorkbench()
             Gui.activateWorkbench("DraftWorkbench")
 
-        self.task = SpacedShapeStringTaskPanelEdit(vobj)
+        self.task = RadialShapeStringTaskPanelEdit(vobj)
         Gui.Control.showDialog(self.task)
         return True
 

@@ -30,7 +30,7 @@ import draftutils.gui_utils as gui_utils
 from ..radial_shapestring import RadialShapeString
 
 if App.GuiUp:
-    from ..view_radialshapestring import ViewProviderRadialShapeString
+    from ..Views import ViewProviderRadialShapeString
 
 
 def make_radialshapestring(Strings,

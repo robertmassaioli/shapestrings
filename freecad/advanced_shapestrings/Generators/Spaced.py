@@ -30,7 +30,7 @@ import draftutils.gui_utils as gui_utils
 from ..spaced_shapestring import SpacedShapeString
 
 if App.GuiUp:
-    from ..view_spacedshapestring import ViewProviderSpacedShapeString
+    from ..Views import ViewProviderSpacedShapeString
 
 
 def make_spacedshapestring(Strings, FontFile, Size=100, Offset=10, UseBoundingBox=False):
