@@ -43,7 +43,7 @@ import draftguitools.gui_base_original as gui_base_original
 import draftutils.todo as todo
 
 from ..paths import get_icon_path
-from ..task_radialshapestring import RadialShapeStringTaskPanelCmd
+from ..Dialogs import RadialShapeStringTaskPanelCmd
 from draftutils.messages import _toolmsg
 
 

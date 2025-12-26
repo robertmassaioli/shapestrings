@@ -40,7 +40,7 @@ import draftguitools.gui_base_original as gui_base_original
 import draftutils.todo as todo
 
 from ..paths import get_icon_path
-from ..task_spacedshapestring import SpacedShapeStringTaskPanelCmd
+from ..Dialogs import SpacedShapeStringTaskPanelCmd
 from draftutils.messages import _toolmsg
 
 # The module is used to prevent complaints from code checkers (flake8)

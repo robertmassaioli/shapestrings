@@ -28,7 +28,7 @@
 import FreeCADGui as Gui
 
 from draftviewproviders.view_base import ViewProviderDraft
-from .task_spacedshapestring import SpacedShapeStringTaskPanelEdit
+from .Dialogs import SpacedShapeStringTaskPanelEdit
 from .paths import get_icon_path
 
 class ViewProviderSpacedShapeString(ViewProviderDraft):

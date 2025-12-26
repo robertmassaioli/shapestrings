@@ -41,7 +41,7 @@ from draftutils.params import get_param
 from draftutils.translate import translate
 from DraftVecUtils import toString
 
-from .paths import get_icon_path, get_ui_path
+from ..paths import get_icon_path, get_ui_path
 
 
 # So the resource file doesn't trigger errors from code checkers (flake8)
