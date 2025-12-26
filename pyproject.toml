@@ -1,31 +1,11 @@
-# References: 
-# https://packaging.python.org/en/latest/specifications/declaring-project-metadata/
-# https://packaging.python.org/en/latest/guides/packaging-namespace-packages/#native-namespace-packages
-# https://packaging.python.org/en/latest/guides/single-sourcing-package-version/
-# https://setuptools.pypa.io/en/latest/userguide/pyproject_config.html
-
-[build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
 
 [project]
-name = "freecad.advanced_shapestrings"
-dynamic = ["version"]
-description = "Advanced tools that work like Shapestrings but even more powerful."
-readme = "README.md"
-license = {file = "LICENSE"}
-maintainers = [
-    {name = "Robert Massaioli", email = "freecad@rmdir.app"},
+version = '0.1.0'
+name = 'ShapeStrings'
+
+requires-python = '>=3.10'
+
+dependencies = [
+    'freecad-stubs>=1.0.21' ,
+    'pyside6>=6.9.2'
 ]
-requires-python = ">=3.8"
-dependencies = [ "PySide6" ]
-
-[project.urls]
-source = "github.com/echo_rm/advanced-shapestrings"
-
-[tool.setuptools]
-packages = ["freecad", "freecad.advanced_shapestrings"]
-include-package-data = true
-
-[tool.setuptools.dynamic]
-version = {attr = "freecad.advanced_shapestrings.version.__version__"}
