@@ -44,8 +44,6 @@ angular step, and optional tangential alignment to the circle.
 
 ## \addtogroup draftguitools
 # @{
-from PySide.QtCore import QT_TRANSLATE_NOOP
-
 import FreeCAD as App
 import FreeCADGui as Gui
 import Draft_rc
@@ -57,13 +55,16 @@ import draftutils.todo as todo
 
 from .paths import get_icon_path
 from .task_radialshapestring import RadialShapeStringTaskPanelCmd
-from draftutils.translate import translate
 from draftutils.messages import _toolmsg, _err, _msg
 
 
 # The module is used to prevent complaints from code checkers (flake8)
 True if Draft_rc.__name__ else False
 
+
+from FreeCAD import Qt
+
+translate = Qt.translate
 
 class RadialShapeString(gui_base_original.Creator):
     """Gui command for the RadialShapeString tool."""
@@ -72,11 +73,11 @@ class RadialShapeString(gui_base_original.Creator):
         """Set icon, menu, and tooltip."""
         return {
             'Pixmap': get_icon_path("AdvancedShapestrings_RadialShapeString.svg"),
-            'MenuText': QT_TRANSLATE_NOOP(
+            'MenuText': translate(
                 "ShapeStrings-Radial",
                 "Radial ShapeString"
             ),
-            'ToolTip': QT_TRANSLATE_NOOP(
+            'ToolTip': translate(
                 "ShapeStrings-Radial",
                 "Creates multiple ShapeStrings from a list of text entries, "
                 "arranged around a center point on a circular arc with a given radius. "

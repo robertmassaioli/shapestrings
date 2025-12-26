@@ -39,7 +39,6 @@ strings with configurable spacing.
 
 ## \addtogroup draftguitools
 # @{
-from PySide.QtCore import QT_TRANSLATE_NOOP
 
 import FreeCAD as App
 import FreeCADGui as Gui
@@ -52,11 +51,14 @@ import draftutils.todo as todo
 
 from .paths import get_icon_path
 from .task_spacedshapestring import SpacedShapeStringTaskPanelCmd
-from draftutils.translate import translate
 from draftutils.messages import _toolmsg, _err, _msg
 
 # The module is used to prevent complaints from code checkers (flake8)
 True if Draft_rc.__name__ else False
+
+from FreeCAD import Qt
+
+translate = Qt.translate
 
 
 class SpacedShapeString(gui_base_original.Creator):
@@ -66,11 +68,11 @@ class SpacedShapeString(gui_base_original.Creator):
         """Set icon, menu, and tooltip."""
         return {
             'Pixmap': get_icon_path("AdvancedShapestrings_SpacedShapeString.svg"),
-            'MenuText': QT_TRANSLATE_NOOP(
+            'MenuText': translate(
                 "ShapeStrings-Spaced",
                 "Spaced ShapeString"
             ),
-            'ToolTip': QT_TRANSLATE_NOOP(
+            'ToolTip': translate(
                 "ShapeStrings-Spaced",
                 "Creates multiple ShapeStrings from a list of text entries, "
                 "arranged in a line with uniform spacing. "

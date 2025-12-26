@@ -17,7 +17,7 @@
 #   See the GNU Lesser General Public License for more details.                #
 #                                                                              #
 #   You should have received a copy of the GNU Lesser General Public License   #
-#   along with this library; if not, write to the Free Software Foundation,    # 
+#   along with this library; if not, write to the Free Software Foundation,    #
 #   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA           #
 #                                                                              #
 ################################################################################
@@ -30,17 +30,19 @@
 ## \addtogroup draftobjects
 # @{
 import math
-from PySide.QtCore import QT_TRANSLATE_NOOP
 
 import FreeCAD as App
 import Part
 
 from draftgeoutils import faces
 from draftutils.messages import _wrn, _msg, _toolmsg
-from draftutils.translate import translate
 
 from draftobjects.base import DraftObject
 from .justification import justification_vector
+
+from FreeCAD import Qt
+
+translate = Qt.translate
 
 
 class SpacedShapeString(DraftObject):
@@ -55,29 +57,29 @@ class SpacedShapeString(DraftObject):
         properties = obj.PropertiesList
 
         if "Strings" not in properties:
-            _tip = QT_TRANSLATE_NOOP("App::Property", "List of text strings to render")
+            _tip = translate("App::Property", "List of text strings to render")
             obj.addProperty("App::PropertyStringList", "Strings", "Draft", _tip)
 
         if "Offset" not in properties:
-            _tip = QT_TRANSLATE_NOOP("App::Property", "X-direction offset between each string")
+            _tip = translate("App::Property", "X-direction offset between each string")
             obj.addProperty("App::PropertyLength", "Offset", "Draft", _tip)
             obj.Offset = 10.0
 
         if "UseBoundingBox" not in properties:
-            _tip = QT_TRANSLATE_NOOP("App::Property", "Use bounding box width to calculate spacing between strings")
+            _tip = translate("App::Property", "Use bounding box width to calculate spacing between strings")
             obj.addProperty("App::PropertyBool", "UseBoundingBox", "Draft", _tip)
             obj.UseBoundingBox = False
 
         if "FontFile" not in properties:
-            _tip = QT_TRANSLATE_NOOP("App::Property", "Font file name")
+            _tip = translate("App::Property", "Font file name")
             obj.addProperty("App::PropertyFile", "FontFile", "Draft", _tip)
 
         if "Size" not in properties:
-            _tip = QT_TRANSLATE_NOOP("App::Property", "Height of text")
+            _tip = translate("App::Property", "Height of text")
             obj.addProperty("App::PropertyLength", "Size", "Draft", _tip)
 
         if "Justification" not in properties:
-            _tip = QT_TRANSLATE_NOOP("App::Property", "Horizontal and vertical alignment")
+            _tip = translate("App::Property", "Horizontal and vertical alignment")
             obj.addProperty("App::PropertyEnumeration", "Justification", "Draft", _tip)
             obj.Justification = ["Top-Left", "Top-Center", "Top-Right",
                                  "Middle-Left", "Middle-Center", "Middle-Right",
@@ -85,36 +87,36 @@ class SpacedShapeString(DraftObject):
             obj.Justification = "Bottom-Left"
 
         if "JustificationReference" not in properties:
-            _tip = QT_TRANSLATE_NOOP("App::Property", "Height reference used for justification")
+            _tip = translate("App::Property", "Height reference used for justification")
             obj.addProperty("App::PropertyEnumeration", "JustificationReference", "Draft", _tip)
             obj.JustificationReference = ["Cap Height", "Shape Height"]
             obj.JustificationReference = "Cap Height"
 
         if "KeepLeftMargin" not in properties:
-            _tip = QT_TRANSLATE_NOOP("App::Property", "Keep left margin and leading white space when justification is left")
+            _tip = translate("App::Property", "Keep left margin and leading white space when justification is left")
             obj.addProperty("App::PropertyBool", "KeepLeftMargin", "Draft", _tip)
             obj.KeepLeftMargin = False
 
         if "ScaleToSize" not in properties:
-            _tip = QT_TRANSLATE_NOOP("App::Property", "Scale to ensure cap height is equal to size")
+            _tip = translate("App::Property", "Scale to ensure cap height is equal to size")
             obj.addProperty("App::PropertyBool", "ScaleToSize", "Draft", _tip)
             obj.ScaleToSize = True
 
         if "Tracking" not in properties:
-            _tip = QT_TRANSLATE_NOOP("App::Property", "Inter-character spacing")
+            _tip = translate("App::Property", "Inter-character spacing")
             obj.addProperty("App::PropertyDistance", "Tracking", "Draft", _tip)
 
         if "ObliqueAngle" not in properties:
-            _tip = QT_TRANSLATE_NOOP("App::Property", "Oblique (slant) angle")
+            _tip = translate("App::Property", "Oblique (slant) angle")
             obj.addProperty("App::PropertyAngle", "ObliqueAngle", "Draft", _tip)
 
         if "MakeFace" not in properties:
-            _tip = QT_TRANSLATE_NOOP("App::Property", "Fill letters with faces")
+            _tip = translate("App::Property", "Fill letters with faces")
             obj.addProperty("App::PropertyBool", "MakeFace", "Draft", _tip)
             obj.MakeFace = True
 
         if "Fuse" not in properties:
-            _tip = QT_TRANSLATE_NOOP("App::Property", "Fuse faces if faces overlap, usually not required (can be very slow)")
+            _tip = translate("App::Property", "Fuse faces if faces overlap, usually not required (can be very slow)")
             obj.addProperty("App::PropertyBool", "Fuse", "Draft", _tip)
             obj.Fuse = False
 

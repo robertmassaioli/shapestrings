@@ -1,26 +1,14 @@
 # SPDX-License-Identifier: LGPL-2.1-only
 # SPDX-FileNotice: Part of the ShapeStrings addon.
 
-import FreeCADGui as Gui
-import FreeCAD as App
-from draftutils.messages import _msg
-from .paths import get_icon_path, get_translation_directory
 from .AdvancedShapestringTools import registerCommands
+from .paths import get_translation_directory
 
-# Fallback-safe translate helpers and toolbox entries (inlined from gui_common)
-try:
-    import FreeCAD as App
+from draftutils.messages import _msg
+from FreeCAD import Gui , Qt
 
-    QT_TRANSLATE_NOOP = App.Qt.QT_TRANSLATE_NOOP
+translate = Qt.translate
 
-    def translate(context, text):
-        return App.Qt.translate(context, text)
-except Exception:
-    def QT_TRANSLATE_NOOP(context, text):
-        return text
-
-    def translate(context, text):
-        return text
 
 TOOLBOX = [
     "ShapeStrings_Spaced",
@@ -53,11 +41,11 @@ def _on_workbench_activated():
         return
 
     workbench.appendToolbar(
-        QT_TRANSLATE_NOOP("Workbench", "Shapestrings"),
+        translate("Workbench", "ShapeStrings"),
         TOOLBOX,
     )
     workbench.appendMenu(
-        QT_TRANSLATE_NOOP("Workbench", "&Shapestrings"),
+        translate("Workbench", "&ShapeStrings"),
         TOOLBOX,
     )
     _msg("Appended Shapestrings tools to Draft workbench\n")
