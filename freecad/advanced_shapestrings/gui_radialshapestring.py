@@ -17,7 +17,7 @@
 #   See the GNU Lesser General Public License for more details.                #
 #                                                                              #
 #   You should have received a copy of the GNU Lesser General Public License   #
-#   along with this library; if not, write to the Free Software Foundation,    # 
+#   along with this library; if not, write to the Free Software Foundation,    #
 #   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA           #
 #                                                                              #
 ################################################################################
@@ -73,11 +73,11 @@ class RadialShapeString(gui_base_original.Creator):
         return {
             'Pixmap': get_icon_path("AdvancedShapestrings_RadialShapeString.svg"),
             'MenuText': QT_TRANSLATE_NOOP(
-                "AdvancedShapestrings_RadialShapeString",
+                "ShapeStrings-Radial",
                 "Radial ShapeString"
             ),
             'ToolTip': QT_TRANSLATE_NOOP(
-                "AdvancedShapestrings_RadialShapeString",
+                "ShapeStrings-Radial",
                 "Creates multiple ShapeStrings from a list of text entries, "
                 "arranged around a center point on a circular arc with a given radius. "
                 "Positions are controlled by a starting angle and an angular step, and each "
@@ -109,7 +109,8 @@ class RadialShapeString(gui_base_original.Creator):
         super().finish()
 
 
-Gui.addCommand('AdvancedShapestrings_RadialShapeString', RadialShapeString())
+def registerRadial():
+    Gui.addCommand('ShapeStrings_Radial', RadialShapeString())
 
 
 

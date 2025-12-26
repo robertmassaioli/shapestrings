@@ -17,7 +17,7 @@
 #   See the GNU Lesser General Public License for more details.                #
 #                                                                              #
 #   You should have received a copy of the GNU Lesser General Public License   #
-#   along with this library; if not, write to the Free Software Foundation,    # 
+#   along with this library; if not, write to the Free Software Foundation,    #
 #   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA           #
 #                                                                              #
 ################################################################################
@@ -38,7 +38,7 @@ class ViewProviderSpacedShapeString(ViewProviderDraft):
 
     def getIcon(self):
         return get_icon_path("AdvancedShapestrings_SpacedShapeString.svg")
-    
+
     def updateData(self, obj, prop):
         if (prop == "Strings" or
             prop == "FontFile" or
@@ -46,7 +46,7 @@ class ViewProviderSpacedShapeString(ViewProviderDraft):
             prop == "Offset" or
             prop == "UseBoundingBox"):
             obj.recompute()
-        
+
         return
 
     def setEdit(self, vobj, mode):

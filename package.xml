@@ -68,10 +68,7 @@
     <!--[ Content ]――――――――――――――――――――――――――――――――――――――――――――――――――――――――――-->
 
     <content>
-        <workbench>
-            <subdirectory>.</subdirectory>
-            <classname>AdvancedShapestrings</classname>
-        </workbench>
+        <other/>
     </content>
 
 </package>

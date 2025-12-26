@@ -17,7 +17,7 @@
 #   See the GNU Lesser General Public License for more details.                #
 #                                                                              #
 #   You should have received a copy of the GNU Lesser General Public License   #
-#   along with this library; if not, write to the Free Software Foundation,    # 
+#   along with this library; if not, write to the Free Software Foundation,    #
 #   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA           #
 #                                                                              #
 ################################################################################
@@ -54,7 +54,7 @@ True if Draft_rc.__name__ else False
 ADV_PARAM_GROUP = "User parameter:BaseApp/Preferences/Mod/AdvancedShapestring"
 
 class SpacedShapeStringTaskPanel:
-    """Base class for AdvancedShapestrings_SpacedShapeString task panel."""
+    """Base class for spaced task panel."""
 
     def __init__(self,
                  point=App.Vector(0, 0, 0),
@@ -260,7 +260,7 @@ class SpacedShapeStringTaskPanel:
 
 
 class SpacedShapeStringTaskPanelCmd(SpacedShapeStringTaskPanel):
-    """Task panel for AdvancedShapestrings_SpacedShapeString."""
+    """Task panel for the spaced command."""
 
     def __init__(self, sourceCmd):
         super().__init__()
@@ -333,7 +333,7 @@ class SpacedShapeStringTaskPanelCmd(SpacedShapeStringTaskPanel):
             _msg("SpacedShapeString commit commands:\n" + "\n".join(commands))
             self.sourceCmd.commit(translate("draft", "Create SpacedShapeString"), commands)
         except Exception:
-            _err("AdvancedShapestrings_SpacedShapeString: error delaying commit\n")
+            _err("ShapeStrings_Spaced: error delaying commit\n")
             # Also print the full Python traceback to the console/log
             traceback.print_exc()
 

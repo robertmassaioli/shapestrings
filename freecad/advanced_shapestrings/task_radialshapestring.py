@@ -17,7 +17,7 @@
 #   See the GNU Lesser General Public License for more details.                #
 #                                                                              #
 #   You should have received a copy of the GNU Lesser General Public License   #
-#   along with this library; if not, write to the Free Software Foundation,    # 
+#   along with this library; if not, write to the Free Software Foundation,    #
 #   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA           #
 #                                                                              #
 ################################################################################
@@ -60,7 +60,7 @@ ADV_PARAM_GROUP = "User parameter:BaseApp/Preferences/Mod/AdvancedShapestring"
 
 
 class RadialShapeStringTaskPanel:
-    """Base class for AdvancedShapestrings_RadialShapeString task panel."""
+    """Base class for radial task panel."""
 
     def __init__(self,
                  point=App.Vector(0, 0, 0),
@@ -289,7 +289,7 @@ class RadialShapeStringTaskPanel:
 
 
 class RadialShapeStringTaskPanelCmd(RadialShapeStringTaskPanel):
-    """Task panel for AdvancedShapestrings_RadialShapeString (command mode)."""
+    """Task panel for radial (command mode)."""
 
     def __init__(self, sourceCmd):
         super().__init__()

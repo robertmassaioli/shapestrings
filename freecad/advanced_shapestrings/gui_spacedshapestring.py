@@ -17,7 +17,7 @@
 #   See the GNU Lesser General Public License for more details.                #
 #                                                                              #
 #   You should have received a copy of the GNU Lesser General Public License   #
-#   along with this library; if not, write to the Free Software Foundation,    # 
+#   along with this library; if not, write to the Free Software Foundation,    #
 #   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA           #
 #                                                                              #
 ################################################################################
@@ -67,11 +67,11 @@ class SpacedShapeString(gui_base_original.Creator):
         return {
             'Pixmap': get_icon_path("AdvancedShapestrings_SpacedShapeString.svg"),
             'MenuText': QT_TRANSLATE_NOOP(
-                "AdvancedShapestrings_SpacedShapeString",
+                "ShapeStrings-Spaced",
                 "Spaced ShapeString"
             ),
             'ToolTip': QT_TRANSLATE_NOOP(
-                "AdvancedShapestrings_SpacedShapeString",
+                "ShapeStrings-Spaced",
                 "Creates multiple ShapeStrings from a list of text entries, "
                 "arranged in a line with uniform spacing. "
                 "Spacing can be fixed by insertion point or adjusted for visible gaps "
@@ -93,7 +93,7 @@ class SpacedShapeString(gui_base_original.Creator):
 
     def finish(self):
         """Finalize the command and remove callbacks."""
-        
+
         if not hasattr(self, 'planetrack'):
             self.planetrack = None
         if hasattr(self, 'call'):
@@ -102,7 +102,8 @@ class SpacedShapeString(gui_base_original.Creator):
             self.ui = Gui.draftToolBar
         super().finish()
 
-Gui.addCommand('AdvancedShapestrings_SpacedShapeString', SpacedShapeString())
+def registerSpaced():
+    Gui.addCommand('ShapeStrings_Spaced', SpacedShapeString())
 
 
 ## @}
