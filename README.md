@@ -169,9 +169,9 @@ make_spacedshapestring(["String1", "String2"], "/path/to/font.ttf", Size=10, Off
 ### Radial Spaced text
 
 ```python
-from freecad.ShapeStrings.make_radialshapestring import make_radialshapestring
+from ShapeStrings import Radial
 
-make_radialshapestring(
+Radial(
     ["1", "2", "3", "4", "5"],
     "/path/to/font.ttf",
     Size=4,

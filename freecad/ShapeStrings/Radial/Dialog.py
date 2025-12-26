@@ -344,12 +344,12 @@ class RadialShapeStringTaskPanelCmd(RadialShapeStringTaskPanel):
 
         try:
             qr, sup, points, fil = self.sourceCmd.getStrings()
-            c = "freecad.ShapeStrings"
+            c = "ShapeStrings"
             Gui.addModule("Draft")
-            Gui.addModule(f"{c}.AdvancedShapestring")
+            Gui.addModule(f"{c}")
             commands = [
                 (
-                    f"rs = {c}.AdvancedShapestring.make_radialshapestring("
+                    f"rs = {c}.Radial("
                     f"Strings={string_list_expr}, "
                     f"FontFile={FFile}, Size={Size}, "
                     f"Radius={Radius}, StartAngle={StartAngle}, "
@@ -365,12 +365,12 @@ class RadialShapeStringTaskPanelCmd(RadialShapeStringTaskPanel):
                 "Draft.autogroup(rs)",
                 "FreeCAD.ActiveDocument.recompute()",
             ]
-            _msg("RadialShapeString commit commands:\n" + "\n".join(commands))
+            _msg("Radial ShapeString commit commands:\n" + "\n".join(commands))
             self.sourceCmd.commit(
-                translate("draft", "Create RadialShapeString"), commands
+                translate("draft", "Create Radial ShapeString"), commands
             )
         except Exception:
-            _err("ShapeStrings_Radial: error delaying commit\n")
+            _err("Radial ShapeString: error delaying commit\n")
             traceback.print_exc()
 
 

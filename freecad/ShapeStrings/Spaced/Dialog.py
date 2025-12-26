@@ -306,12 +306,12 @@ class SpacedShapeStringTaskPanelCmd(SpacedShapeStringTaskPanel):
 
         try:
             qr, sup, points, fil = self.sourceCmd.getStrings()
-            c = "freecad.ShapeStrings"
+            c = "ShapeStrings"
             Gui.addModule("Draft")
-            Gui.addModule(f"{c}.AdvancedShapestring")
+            Gui.addModule(f"{c}")
             commands = [
                 (
-                    f"ss = {c}.AdvancedShapestring.make_spacedshapestring("
+                    f"ss = {c}.Spaced("
                     f"Strings={string_list_expr}, "
                     f"FontFile={FFile}, Size={Size}, Offset={Offset}, "
                     f"UseBoundingBox={UseBoundingBox})"
@@ -325,10 +325,10 @@ class SpacedShapeStringTaskPanelCmd(SpacedShapeStringTaskPanel):
                 "FreeCAD.ActiveDocument.recompute()",
             ]
             # Print the commands that will be passed to commit for debugging/logging
-            _msg("SpacedShapeString commit commands:\n" + "\n".join(commands))
-            self.sourceCmd.commit(translate("draft", "Create SpacedShapeString"), commands)
+            _msg("Spaced ShapeString commit commands:\n" + "\n".join(commands))
+            self.sourceCmd.commit(translate("draft", "Create Spaced ShapeString"), commands)
         except Exception:
-            _err("ShapeStrings_Spaced: error delaying commit\n")
+            _err("Spaced ShapeString : error delaying commit\n")
             # Also print the full Python traceback to the console/log
             traceback.print_exc()
 
