@@ -1,56 +1,77 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<package format="1" xmlns="https://wiki.freecad.org/PackageMetadata">
-  <name>Advanced ShapeStrings</name>
-  <!-- What the Addon Manager displays to users -->
+<?xml
+    version = '1.0'
+    encoding = 'UTF-8'
+    standalone = 'no'
+?>
+<package
+    format = '1'
+    xmlns = 'https://wiki.freecad.org/Package_Metadata'
+>
 
-  <description>Advanced tools for creating and manipulating ShapeStrings in FreeCAD.</description>
-  <!-- Text-only, concise description shown in the Addon Manager -->
+    <!--[ Versions ]―――――――――――――――――――――――――――――――――――――――――――――――――――――――――-->
 
-  <version>0.1.0</version>
-  <!-- Semantic versioning or CalVer; update on each release -->
+    <freecadmin>0.20.0</freecadmin>
+    <version>0.1.0</version>
+    <date>2025-12-24</date>
 
-  <date>2025-12-24</date>
-  <!-- Date of this version in YYYY-MM-DD -->
+    <!--[ Info ]―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――-->
 
-  <maintainer email="advanced-shapestrings@rmdir.app">Robert Massaioli</maintainer>
-  <!-- Replace with a real email/name when you are ready to maintain it -->
+    <description>Advanced tools for creating and manipulating ShapeStrings.</description>
+    <name>ShapeStrings</name>
 
-  <license file="LICENSE">LGPL-2.1-only</license>
-  <!-- SPDX short identifier; file path is relative to package.xml -->
+    <!--[ Tags ]―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――-->
 
-  <url type="repository" branch="main">https://github.com/robertmassaioli/advanced-shapestrings</url>
-  <!-- Main git repository and branch used by the Addon Manager -->
+    <tag>Draft</tag>
+    <tag>Text</tag>
 
-  <icon>freecad/advanced_shapestrings/resources/icons/Workbench.svg</icon>
-  <!-- Path to an icon file relative to package.xml (adjust if different) -->
+    <!--[ Maintainers ]――――――――――――――――――――――――――――――――――――――――――――――――――――――-->
 
-  <freecadmin>0.20.0</freecadmin>
-  <!-- Minimum FreeCAD version that this workbench supports -->
+    <maintainer
+        email = 'advanced-shapestrings@rmdir.app'
+    >Robert Massaioli</maintainer>
 
-  <content>
-    <workbench>
-      <name>Advanced Shapestrings</name>
-      <!-- Workbench name shown in FreeCAD UI -->
+    <!--[ Authors ]――――――――――――――――――――――――――――――――――――――――――――――――――――――――――-->
 
-      <description>Advanced ShapeString creation and editing tools for FreeCAD.</description>
+    <author
+        email = 'advanced-shapestrings@rmdir.app'
+    >Robert Massaioli</author>
 
-      <version>0.1.0</version>
-      <!-- Version of this specific workbench content item -->
+    <!--[ Licenses ]―――――――――――――――――――――――――――――――――――――――――――――――――――――――――-->
 
-      <classname>AdvancedShapestrings</classname>
-      <!-- Must match the class name defined in InitGui.py -->
+    <license
+        file = 'LICENSE'
+    >LGPL-2.1-only</license>
 
-      <subdirectory>.</subdirectory>
-      <!-- Workbench is located in the top-level directory of the repo -->
+    <!--[ Icon ]―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――-->
 
-      <icon>freecad/advanced_shapestrings/resources/icons/Workbench.svg</icon>
-      <!-- Workbench-specific icon; same as package icon here -->
+    <icon>freecad/advanced_shapestrings/resources/icons/Workbench.svg</icon>
 
-      <tag>shapestring</tag>
-      <tag>draft</tag>
-      <tag>text</tag>
-      <!-- Tags for categorization in the Addon Manager -->
+    <!--[ Urls ]―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――-->
 
-    </workbench>
-  </content>
+    <url
+        type = 'documentation'
+    >https://github.com/robertmassaioli/advanced-shapestrings</url>
+
+    <url
+        branch = 'main'
+        type = 'repository'
+    >https://github.com/robertmassaioli/advanced-shapestrings</url>
+
+    <url
+        type = 'bugtracker'
+    >https://github.com/robertmassaioli/advanced-shapestrings/issues</url>
+
+    <url
+        type = 'readme'
+    >https://github.com/robertmassaioli/advanced-shapestrings/blob/main/README.md</url>
+
+    <!--[ Content ]――――――――――――――――――――――――――――――――――――――――――――――――――――――――――-->
+
+    <content>
+        <workbench>
+            <subdirectory>.</subdirectory>
+            <classname>AdvancedShapestrings</classname>
+        </workbench>
+    </content>
+
 </package>
