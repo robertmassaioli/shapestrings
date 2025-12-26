@@ -6,8 +6,20 @@ import FreeCAD as App
 from draftutils.messages import _msg
 from .paths import get_icon_path, get_translation_directory
 
-translate=App.Qt.translate
-QT_TRANSLATE_NOOP=App.Qt.QT_TRANSLATE_NOOP
+# Fallback-safe translate helpers and toolbox entries (inlined from gui_common)
+try:
+    import FreeCAD as App
+
+    QT_TRANSLATE_NOOP = App.Qt.QT_TRANSLATE_NOOP
+
+    def translate(context, text):
+        return App.Qt.translate(context, text)
+except Exception:
+    def QT_TRANSLATE_NOOP(context, text):
+        return text
+
+    def translate(context, text):
+        return text
 
 # Add translations path
 Gui.addLanguagePath(get_translation_directory())
@@ -17,12 +29,12 @@ class AdvancedShapestrings(Gui.Workbench):
     """
     class which gets initiated at startup of the gui
     """
-    MenuText = translate("Workbench", "Advanced Shapestrings")
-    ToolTip = translate("Workbench", "More advanced shapestring tools")
+    MenuText = translate("Workbench", "Shapestrings")
+    ToolTip = translate("Workbench", "Many more Shapestring tools")
     Icon = get_icon_path("Workbench.svg")
     toolbox = [
-        "AdvancedShapestrings_SpacedShapeString",  # SpacedShapeString
-        "AdvancedShapestrings_RadialShapeString",  # RadialShapeString
+        "AdvancedShapestrings_SpacedShapeString",
+        "AdvancedShapestrings_RadialShapeString",
     ]
 
     def GetClassName(self):
@@ -56,8 +68,11 @@ class AdvancedShapestrings(Gui.Workbench):
             "Switching to advanced_shapestrings") + "\n")
 
         # NOTE: Context for this commands must be "Workbench"
-        self.appendToolbar(QT_TRANSLATE_NOOP("Workbench", "Tools"), self.toolbox)
-        self.appendMenu(QT_TRANSLATE_NOOP("Workbench", "Tools"), self.toolbox)
+        self.appendToolbar(QT_TRANSLATE_NOOP("Workbench", "Shapestring Tools"), self.toolbox)
+        self.appendMenu(QT_TRANSLATE_NOOP("Workbench", "Shapestring Tools"), self.toolbox)
+
+        # Ensure the Draft workbench receives our toolbar/menu
+        self.append_shapestrings_to_draft_workbench()
 
     def Activated(self):
         '''
@@ -79,6 +94,34 @@ class AdvancedShapestrings(Gui.Workbench):
         App.Console.PrintMessage(translate(
             "Log",
             "Workbench advanced_shapestrings de-activated.") + "\n")
+        
+    def append_shapestrings_to_draft_workbench(self):
+        """Append Shapestrings toolbar and menu to the Draft workbench.
 
+        This is designed to be safe to call at import time; it will no-op in
+        headless environments and report errors via the FreeCAD console.
+        """
+        try:
+            draft_wb = Gui.getWorkbench("DraftWorkbench")
+            if draft_wb:
+                draft_wb.appendToolbar(
+                    QT_TRANSLATE_NOOP("Workbench", "Shapestrings"),
+                    self.toolbox,
+                )
+                draft_wb.appendMenu(
+                    QT_TRANSLATE_NOOP("Workbench", "&Shapestrings"),
+                    self.toolbox,
+                )
+                _msg("Appended Shapestrings tools to Draft workbench\n")
+        except Exception as exc:
+            try:
+                App.Console.PrintError(
+                    "AdvancedShapestrings: could not append to Draft workbench: {}\n".format(exc)
+                )
+            except Exception:
+                # If App isn't available just ignore
+                pass
 
+# Register the workbench class with FreeCAD
 Gui.addWorkbench(AdvancedShapestrings())
+
