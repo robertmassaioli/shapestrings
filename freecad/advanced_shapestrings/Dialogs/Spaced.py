@@ -39,7 +39,8 @@ from draftutils.params import get_param
 from draftutils.translate import translate
 from DraftVecUtils import toString
 
-from ..paths import get_icon_path, get_ui_path
+from ..Misc.Resources import asIcon , asUI
+
 
 # So the resource file doesn't trigger errors from code checkers (flake8)
 True if Draft_rc.__name__ else False
@@ -62,10 +63,10 @@ class SpacedShapeStringTaskPanel:
             strings = []
 
         # Load custom UI for spaced shapestring
-        self.form = Gui.PySideUic.loadUi(get_ui_path("TaskSpacedShapeString.ui"))
+        self.form = Gui.PySideUic.loadUi(asUI('TaskSpacedShapeString'))
         self.form.setObjectName("SpacedShapeStringTaskPanel")
         self.form.setWindowTitle(translate("draft", "SpacedShapeString"))
-        self.form.setWindowIcon(QtGui.QIcon(get_icon_path("AdvancedShapestrings_SpacedShapeString.svg")))
+        self.form.setWindowIcon(QtGui.QIcon(asIcon('AdvancedShapestrings_SpacedShapeString')))
 
         unit_length = App.Units.Quantity(0.0, App.Units.Length).getUserPreferred()[2]
 

@@ -39,7 +39,7 @@ import Draft_rc
 import draftguitools.gui_base_original as gui_base_original
 import draftutils.todo as todo
 
-from ..paths import get_icon_path
+from ..Misc.Resources import asIcon
 from ..Dialogs import SpacedShapeStringTaskPanelCmd
 from draftutils.messages import _toolmsg
 
@@ -57,7 +57,7 @@ class SpacedShapeString(gui_base_original.Creator):
     def GetResources(self):
         """Set icon, menu, and tooltip."""
         return {
-            'Pixmap': get_icon_path("AdvancedShapestrings_SpacedShapeString.svg"),
+            'Pixmap': asIcon('AdvancedShapestrings_SpacedShapeString'),
             'MenuText': translate(
                 "ShapeStrings-Spaced",
                 "Spaced ShapeString"

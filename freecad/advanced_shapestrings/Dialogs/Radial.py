@@ -41,7 +41,7 @@ from draftutils.params import get_param
 from draftutils.translate import translate
 from DraftVecUtils import toString
 
-from ..paths import get_icon_path, get_ui_path
+from ..Misc.Resources import asIcon , asUI
 
 
 # So the resource file doesn't trigger errors from code checkers (flake8)
@@ -71,11 +71,11 @@ class RadialShapeStringTaskPanel:
             strings = []
 
         # Load custom UI for radial shapestring
-        self.form = Gui.PySideUic.loadUi(get_ui_path("TaskRadialShapeString.ui"))
+        self.form = Gui.PySideUic.loadUi(asUI('TaskRadialShapeString'))
         self.form.setObjectName("RadialShapeStringTaskPanel")
         self.form.setWindowTitle(translate("draft", "RadialShapeString"))
         self.form.setWindowIcon(
-            QtGui.QIcon(get_icon_path("AdvancedShapestrings_RadialShapeString.svg"))
+            QtGui.QIcon(asIcon('AdvancedShapestrings_RadialShapeString'))
         )
 
         unit_length = App.Units.Quantity(0.0, App.Units.Length).getUserPreferred()[2]

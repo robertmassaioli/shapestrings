@@ -30,7 +30,7 @@ import FreeCADGui as Gui
 
 from draftviewproviders.view_base import ViewProviderDraft
 from ..Dialogs import RadialShapeStringTaskPanelEdit
-from ..paths import get_icon_path
+from ..Misc.Resources import asIcon
 
 
 class ViewProviderRadialShapeString(ViewProviderDraft):
@@ -39,7 +39,7 @@ class ViewProviderRadialShapeString(ViewProviderDraft):
         vobj.Proxy = self
 
     def getIcon(self):
-        return get_icon_path("AdvancedShapestrings_RadialShapeString.svg")
+        return asIcon('AdvancedShapestrings_RadialShapeString')
 
     def updateData(self, obj, prop):
         if (

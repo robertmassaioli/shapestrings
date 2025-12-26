@@ -29,7 +29,7 @@ import FreeCADGui as Gui
 
 from draftviewproviders.view_base import ViewProviderDraft
 from ..Dialogs import SpacedShapeStringTaskPanelEdit
-from ..paths import get_icon_path
+from ..Misc.Resources import asIcon
 
 class ViewProviderSpacedShapeString(ViewProviderDraft):
 
@@ -37,7 +37,7 @@ class ViewProviderSpacedShapeString(ViewProviderDraft):
         vobj.Proxy = self
 
     def getIcon(self):
-        return get_icon_path("AdvancedShapestrings_SpacedShapeString.svg")
+        return asIcon('AdvancedShapestrings_SpacedShapeString')
 
     def updateData(self, obj, prop):
         if (prop == "Strings" or
