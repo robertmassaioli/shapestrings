@@ -97,18 +97,20 @@ class AdvancedShapestrings(Gui.Workbench):
 # Register the workbench class with FreeCAD
 Gui.addWorkbench(AdvancedShapestrings())
 
+_ran_draft_refresh = False
+_appended_to_draft = False
+
 def _on_workbench_activated():
+    global _ran_draft_refresh, _appended_to_draft
+
     wb = Gui.activeWorkbench()
-    # Ensure we have the Python wrapper, not just the C++ instance
     if not hasattr(wb, "__Workbench__"):
         return
-    # Only run when Draft is actually active
-    if wb.__class__.__name__ == "DraftWorkbench":
-        """Append Shapestrings toolbar and menu to the Draft workbench.
+    if wb.__class__.__name__ != "DraftWorkbench":
+        return
 
-        This is designed to be safe to call at import time; it will no-op in
-        headless environments and report errors via the FreeCAD console.
-        """
+    # First, try to append our toolbar/menu if not done yet
+    if not _appended_to_draft:
         try:
             draft_wb = Gui.getWorkbench("DraftWorkbench")
             if draft_wb:
@@ -121,14 +123,31 @@ def _on_workbench_activated():
                     TOOLBOX,
                 )
                 _msg("Appended Shapestrings tools to Draft workbench\n")
+                _appended_to_draft = True  # Only set when appendMenu completed
         except Exception as exc:
             try:
                 App.Console.PrintError(
-                    "AdvancedShapestrings: could not append to Draft workbench: {}\n".format(exc)
+                    "AdvancedShapestrings: could not append to Draft workbench: {}\n"
+                    .format(exc)
                 )
             except Exception:
-                # If App isn't available just ignore
                 pass
+            # append failed; do NOT try to refresh yet
+            return
+
+    # Only do the refresh if:
+    #  - appendMenu has succeeded at least once
+    #  - and we have not already done the refresh
+    if _appended_to_draft and not _ran_draft_refresh:
+        _ran_draft_refresh = True
+        # Bounce through another workbench to force UI refresh
+        Gui.activateWorkbench("PartWorkbench")
+        Gui.activateWorkbench("DraftWorkbench")
+        # Optionally disconnect so this handler is run only once
+        try:
+            Gui.getMainWindow().workbenchActivated.disconnect(_on_workbench_activated)
+        except Exception:
+            pass
 
 # Connect once (e.g. in your InitGui.py)
 Gui.getMainWindow().workbenchActivated.connect(_on_workbench_activated)
