@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: LGPL-2.1-only
+# SPDX-FileNotice: Part of the ShapeStrings addon.
+
 # resources.py
 import os
 
