@@ -132,9 +132,10 @@ Strings can be oriented tangentially to the circle (ideal for gauges and knobs) 
 
 ## Using the tools (GUI)
 
+Navigate to the `Draft` workbench
+
 ### SpacedShapeString
-1. Switch to the Shapestrings workbench.  
-2. Choose the "Spaced shape from text" tool.  
+2. Click the `Spaced ShapeString` action.
 3. In the task panel:
    - Add, edit or remove strings.
    - Select a font file.
@@ -144,8 +145,7 @@ Strings can be oriented tangentially to the circle (ideal for gauges and knobs) 
 5. Click OK to create the SpacedShapeString object in the active document.
 
 ### RadialShapeString
-1. Switch to the Shapestrings workbench.  
-2. Choose the "Radial shape from text" tool.  
+2. Click the `Radial ShapeString` action.
 3. In the task panel:
    - Add, edit or remove strings.
    - Select a font file.
@@ -161,9 +161,9 @@ Example (run the following examples in the FreeCAD Python console with an open d
 ### Linear Spaced text
 
 ```python
-from freecad.ShapeStrings.make_spacedshapestring import make_spacedshapestring
+from ShapeStrings import Spaced
 
-make_spacedshapestring(["String1", "String2"], "/path/to/font.ttf", Size=10, Offset=5, UseBoundingBox=False)
+Spaced(["String1", "String2"], "/path/to/font.ttf", Size=10, Offset=5, UseBoundingBox=False)
 ```
 
 ### Radial Spaced text
