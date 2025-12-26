@@ -1,8 +1,8 @@
-# AdvancedShapestrings (FreeCAD)
+# ShapeStrings (FreeCAD)
 
 ## Overview
 
-AdvancedShapestrings adds a new FreeCAD workbench with additional, or improved, Shapestring commands.
+ShapeStrings adds a new FreeCAD workbench with additional, or improved, Shapestring commands.
 
 ## Compatability
 
@@ -12,7 +12,7 @@ This Workbench was developed against FreeCad version 1.0.2 and is designed to wo
 
 Icon: 
 
-![SpacedShapeString icon](./freecad/advanced_shapestrings/resources/icons/AdvancedShapestrings_SpacedShapeString.svg)
+![SpacedShapeString icon](./freecad/ShapeStrings/resources/icons/AdvancedShapestrings_SpacedShapeString.svg)
 
 ### Screenshot
 
@@ -69,7 +69,7 @@ The resulting shapes are standard FreeCAD objects that work seamlessly with both
 
 Icon: 
 
-![RadialShapeString icon](./freecad/advanced_shapestrings/resources/icons/AdvancedShapestrings_RadialShapeString.svg)
+![RadialShapeString icon](./freecad/ShapeStrings/resources/icons/AdvancedShapestrings_RadialShapeString.svg)
 
 ### Screenshot
 
@@ -133,7 +133,7 @@ Strings can be oriented tangentially to the circle (ideal for gauges and knobs) 
 ## Using the tools (GUI)
 
 ### SpacedShapeString
-1. Switch to the Advanced Shapestrings workbench.  
+1. Switch to the Shapestrings workbench.  
 2. Choose the "Spaced shape from text" tool.  
 3. In the task panel:
    - Add, edit or remove strings.
@@ -144,7 +144,7 @@ Strings can be oriented tangentially to the circle (ideal for gauges and knobs) 
 5. Click OK to create the SpacedShapeString object in the active document.
 
 ### RadialShapeString
-1. Switch to the Advanced Shapestrings workbench.  
+1. Switch to the Shapestrings workbench.  
 2. Choose the "Radial shape from text" tool.  
 3. In the task panel:
    - Add, edit or remove strings.
@@ -161,7 +161,7 @@ Example (run the following examples in the FreeCAD Python console with an open d
 ### Linear Spaced text
 
 ```python
-from freecad.advanced_shapestrings.make_spacedshapestring import make_spacedshapestring
+from freecad.ShapeStrings.make_spacedshapestring import make_spacedshapestring
 
 make_spacedshapestring(["String1", "String2"], "/path/to/font.ttf", Size=10, Offset=5, UseBoundingBox=False)
 ```
@@ -169,7 +169,7 @@ make_spacedshapestring(["String1", "String2"], "/path/to/font.ttf", Size=10, Off
 ### Radial Spaced text
 
 ```python
-from freecad.advanced_shapestrings.make_radialshapestring import make_radialshapestring
+from freecad.ShapeStrings.make_radialshapestring import make_radialshapestring
 
 make_radialshapestring(
     ["1", "2", "3", "4", "5"],

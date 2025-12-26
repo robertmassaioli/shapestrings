@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: LGPL-2.1-only
 # SPDX-FileNotice: Part of the ShapeStrings addon.
 
-import freecad.advanced_shapestrings as module
+import freecad.ShapeStrings as module
 from importlib import resources
 from os.path import dirname , join
 from typing import TypedDict

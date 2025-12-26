@@ -97,7 +97,7 @@ LUPDATE=/usr/lib/qt6/bin/lupdate # from Qt6
 # LUPDATE=lupdate                  # from Qt5
 LRELEASE=/usr/lib/qt6/bin/lrelease # from Qt6
 # LRELEASE=lrelease                 # from Qt5
-WB="advanced_shapestrings"
+WB="ShapeStrings"
 
 # Enforce underscore on locales
 sed -i '3s/-/_/' ${WB}*.ts

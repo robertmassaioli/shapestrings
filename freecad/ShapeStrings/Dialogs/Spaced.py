@@ -22,9 +22,7 @@
 #                                                                              #
 ################################################################################
 
-
-"""Provides the task panel code for the Draft RadialShapeString tool."""
-
+"""Provides the task panel code for the Draft SpacedShapeString tool."""
 
 import traceback
 import PySide.QtCore as QtCore
@@ -47,41 +45,31 @@ from ..Misc.Resources import asIcon , asUI
 # So the resource file doesn't trigger errors from code checkers (flake8)
 True if Draft_rc.__name__ else False
 
-
 # Parameter groups for preferences
-ADV_PARAM_GROUP = "User parameter:BaseApp/Preferences/Mod/AdvancedShapestring"
+ADV_PARAM_GROUP = "User parameter:BaseApp/Preferences/Mod/ShapeStrings"
 
-
-class RadialShapeStringTaskPanel:
-    """Base class for radial task panel."""
+class SpacedShapeStringTaskPanel:
+    """Base class for spaced task panel."""
 
     def __init__(self,
                  point=App.Vector(0, 0, 0),
                  size=10,
                  strings=None,
-                 radius=50.0,
-                 start_angle=0.0,
-                 angle_step=30.0,
-                 tangential=True,
-                 rotation_direction="CounterClockwise",
-                 string_rotation=0.0,
+                 offset=10.0,
+                 use_bounding_box=False,
                  font=""):
 
         if strings is None:
             strings = []
 
-        # Load custom UI for radial shapestring
-        self.form = Gui.PySideUic.loadUi(asUI('TaskRadialShapeString'))
-        self.form.setObjectName("RadialShapeStringTaskPanel")
-        self.form.setWindowTitle(translate("draft", "RadialShapeString"))
-        self.form.setWindowIcon(
-            QtGui.QIcon(asIcon('AdvancedShapestrings_RadialShapeString'))
-        )
+        # Load custom UI for spaced shapestring
+        self.form = Gui.PySideUic.loadUi(asUI('TaskSpacedShapeString'))
+        self.form.setObjectName("SpacedShapeStringTaskPanel")
+        self.form.setWindowTitle(translate("draft", "SpacedShapeString"))
+        self.form.setWindowIcon(QtGui.QIcon(asIcon('AdvancedShapestrings_SpacedShapeString')))
 
         unit_length = App.Units.Quantity(0.0, App.Units.Length).getUserPreferred()[2]
-        unit_angle = App.Units.Quantity(0.0, App.Units.Angle).getUserPreferred()[2]
 
-        # Center point
         self.form.sbX.setProperty("rawValue", point.x)
         self.form.sbX.setProperty("unit", unit_length)
         self.form.sbY.setProperty("rawValue", point.y)
@@ -89,11 +77,10 @@ class RadialShapeStringTaskPanel:
         self.form.sbZ.setProperty("rawValue", point.z)
         self.form.sbZ.setProperty("unit", unit_length)
 
-        # Text height
         self.form.sbHeight.setProperty("rawValue", size)
         self.form.sbHeight.setProperty("unit", unit_length)
 
-        # Strings list
+        # Populate listStrings instead of pteStrings
         list_widget = self.form.listStrings
         list_widget.clear()
         if strings:
@@ -102,36 +89,15 @@ class RadialShapeStringTaskPanel:
                 item.setFlags(item.flags() | QtCore.Qt.ItemIsEditable)
                 list_widget.addItem(item)
         else:
+            # Provide a default editable item
             item = QtGui.QListWidgetItem(translate("draft", "Default"))
             item.setFlags(item.flags() | QtCore.Qt.ItemIsEditable)
             list_widget.addItem(item)
 
-        # Radius
-        self.form.sbRadius.setProperty("rawValue", radius)
-        self.form.sbRadius.setProperty("unit", unit_length)
-
-        # Start angle
-        self.form.sbStartAngle.setProperty("rawValue", start_angle)
-        self.form.sbStartAngle.setProperty("unit", unit_angle)
-
-        # Angle step
-        self.form.sbAngleStep.setProperty("rawValue", angle_step)
-        self.form.sbAngleStep.setProperty("unit", unit_angle)
-
-        # Tangential checkbox
-        self.form.cbTangential.setChecked(bool(tangential))
-
-        # Rotation direction combo
-        self.form.cbRotationDirection.clear()
-        self.form.cbRotationDirection.addItem("CounterClockwise")
-        self.form.cbRotationDirection.addItem("Clockwise")
-        self.form.cbRotationDirection.setCurrentIndex(
-            0 if rotation_direction == "CounterClockwise" else 1
-        )
-
-        # String rotation
-        self.form.sbStringRotation.setProperty("rawValue", string_rotation)
-        self.form.sbStringRotation.setProperty("unit", unit_angle)
+        # Offset and UseBoundingBox controls
+        self.form.sbOffset.setProperty("rawValue", offset)
+        self.form.sbOffset.setProperty("unit", unit_length)
+        self.form.cbUseBoundingBox.setChecked(bool(use_bounding_box))
 
         # Platform dialog setup
         self.platWinDialog("Overwrite")
@@ -139,7 +105,7 @@ class RadialShapeStringTaskPanel:
         # Parameter groups
         self._adv_params = App.ParamGet(ADV_PARAM_GROUP)
 
-        # Font file: AdvancedShapestring default → Draft default → explicit arg → empty
+        # Font file: Shapestring default → Draft default → explicit arg → empty
         if font:
             self.fileSpec = font
         else:
@@ -147,6 +113,7 @@ class RadialShapeStringTaskPanel:
             if adv_font:
                 self.fileSpec = adv_font
             else:
+                # Use existing Draft preference helper as final fallback
                 self.fileSpec = get_param("FontFile") or ""
 
         self.form.fcFontFile.setFileName(self.fileSpec)
@@ -172,7 +139,7 @@ class RadialShapeStringTaskPanel:
             self.resetPoint,
         )
 
-        # Connect Add/Remove buttons for strings
+        # New: connect Add/Remove buttons
         QtCore.QObject.connect(
             self.form.pbAddString,
             QtCore.SIGNAL("clicked()"),
@@ -184,17 +151,18 @@ class RadialShapeStringTaskPanel:
             self.removeStringItem,
         )
 
-        self.updateRemoveButtonState()
-
     def fileSelect(self, fn):
-        """Assign the selected font file and remember it as default."""
+        """Assign the selected file and remember it as default for AdvancedShapestring."""
         self.fileSpec = fn
+        # Ensure parameter group exists
         if not hasattr(self, "_adv_params"):
             self._adv_params = App.ParamGet(ADV_PARAM_GROUP)
+        # Store last-used font as mod preference
         self._adv_params.SetString("FontFile", str(fn))
 
+
     def resetPoint(self):
-        """Reset the selected center point to origin."""
+        """Reset the selected point."""
         self.pointPicked = False
         origin = App.Vector(0.0, 0.0, 0.0)
         self.setPoint(origin)
@@ -208,8 +176,10 @@ class RadialShapeStringTaskPanel:
     def addStringItem(self):
         """Add a new editable entry to listStrings."""
         list_widget = self.form.listStrings
+        # Use a simple translated default label, user can edit after
         item = self._createEditableItem(translate("draft", "New string"))
         list_widget.addItem(item)
+        # Optionally start editing the new item immediately
         list_widget.setCurrentItem(item)
         list_widget.editItem(item)
         self.updateRemoveButtonState()
@@ -219,12 +189,14 @@ class RadialShapeStringTaskPanel:
         list_widget = self.form.listStrings
         count = list_widget.count()
         if count <= 1:
-            return
+            return  # Do not allow removing the last remaining item
 
         current_row = list_widget.currentRow()
         if current_row < 0:
+            # If nothing is selected, remove the last item
             current_row = count - 1
         item = list_widget.takeItem(current_row)
+        # Explicitly delete to avoid leaks in long sessions
         del item
         self.updateRemoveButtonState()
 
@@ -249,7 +221,7 @@ class RadialShapeStringTaskPanel:
         if arg["Type"] == "SoKeyboardEvent":
             if arg["Key"] == "ESCAPE":
                 self.reject()
-        elif arg["Type"] == "SoLocation2Event":
+        elif arg["Type"] == "SoLocation2Event":  # mouse movement detection
             self.point, ctrlPoint, info = gui_tool_utils.getPoint(
                 self, arg, noTracker=True
             )
@@ -261,7 +233,7 @@ class RadialShapeStringTaskPanel:
                 self.pointPicked = True
 
     def setPoint(self, point):
-        """Assign the selected center point."""
+        """Assign the selected point."""
         self.form.sbX.setProperty("rawValue", point.x)
         self.form.sbY.setProperty("rawValue", point.y)
         self.form.sbZ.setProperty("rawValue", point.z)
@@ -272,6 +244,7 @@ class RadialShapeStringTaskPanel:
 
         if flag == "Overwrite":
             if "DontUseNativeFontDialog" not in ParamGroup.GetBools():
+                # initialize nonexisting one
                 ParamGroup.SetBool("DontUseNativeFontDialog", True)
             param = ParamGroup.GetBool("DontUseNativeFontDialog")
             self.font_dialog_pref = ParamGroup.GetBool("DontUseNativeDialog")
@@ -281,8 +254,8 @@ class RadialShapeStringTaskPanel:
             ParamGroup.SetBool("DontUseNativeDialog", self.font_dialog_pref)
 
 
-class RadialShapeStringTaskPanelCmd(RadialShapeStringTaskPanel):
-    """Task panel for radial (command mode)."""
+class SpacedShapeStringTaskPanelCmd(SpacedShapeStringTaskPanel):
+    """Task panel for the spaced command."""
 
     def __init__(self, sourceCmd):
         super().__init__()
@@ -290,6 +263,7 @@ class RadialShapeStringTaskPanelCmd(RadialShapeStringTaskPanel):
 
     def accept(self):
         """Execute when clicking the OK button."""
+        # Persist font used in this operation as AdvancedShapestring default
         if not hasattr(self, "_adv_params"):
             self._adv_params = App.ParamGet(ADV_PARAM_GROUP)
         self._adv_params.SetString("FontFile", str(self.fileSpec))
@@ -306,10 +280,12 @@ class RadialShapeStringTaskPanelCmd(RadialShapeStringTaskPanel):
         return True
 
     def createObject(self):
-        """Create RadialShapeString object in the current document."""
+        """Create SpacedShapeString object in the current document."""
 
         # Strings
         strings = self.collectStrings()
+
+        # Escape each for Python string literal usage
         string_list_expr = "[" + ", ".join(
             ['"' + s.replace("\\", "\\\\").replace('"', '\\"') + '"' for s in strings]
         ) + "]"
@@ -317,133 +293,85 @@ class RadialShapeStringTaskPanelCmd(RadialShapeStringTaskPanel):
         # Font file
         FFile = '"' + str(self.fileSpec) + '"'
 
-        # Size
+        # Size and spacing
         Size = str(App.Units.Quantity(self.form.sbHeight.text()).Value)
+        Offset = str(App.Units.Quantity(self.form.sbOffset.text()).Value)
+        UseBoundingBox = str(bool(self.form.cbUseBoundingBox.isChecked()))
 
-        # Radius and angles
-        Radius = str(App.Units.Quantity(self.form.sbRadius.text()).Value)
-        StartAngle = str(App.Units.Quantity(self.form.sbStartAngle.text()).Value)
-        AngleStep = str(App.Units.Quantity(self.form.sbAngleStep.text()).Value)
-        Tangential = str(bool(self.form.cbTangential.isChecked()))
-
-        # Rotation direction from combo box
-        idx = self.form.cbRotationDirection.currentIndex()
-        rotation_direction = (
-            "CounterClockwise" if idx == 0 else "Clockwise"
-        )
-
-        # String rotation
-        StringRotation = str(App.Units.Quantity(self.form.sbStringRotation.text()).Value)
-
-
-        # Base point (center)
+        # Base point
         x = App.Units.Quantity(self.form.sbX.text()).Value
         y = App.Units.Quantity(self.form.sbY.text()).Value
         z = App.Units.Quantity(self.form.sbZ.text()).Value
-        center = App.Vector(x, y, z)
+        ssBase = App.Vector(x, y, z)
 
         try:
             qr, sup, points, fil = self.sourceCmd.getStrings()
-            c = "freecad.advanced_shapestrings"
+            c = "freecad.ShapeStrings"
             Gui.addModule("Draft")
             Gui.addModule(f"{c}.AdvancedShapestring")
             commands = [
                 (
-                    f"rs = {c}.AdvancedShapestring.make_radialshapestring("
+                    f"ss = {c}.AdvancedShapestring.make_spacedshapestring("
                     f"Strings={string_list_expr}, "
-                    f"FontFile={FFile}, Size={Size}, "
-                    f"Radius={Radius}, StartAngle={StartAngle}, "
-                    f"AngleStep={AngleStep}, Tangential={Tangential}, "
-                    f"RotationDirection='{rotation_direction}', "
-                    f"StringRotation={StringRotation})"
+                    f"FontFile={FFile}, Size={Size}, Offset={Offset}, "
+                    f"UseBoundingBox={UseBoundingBox})"
                 ),
                 "plm = FreeCAD.Placement()",
-                f"plm.Base = {toString(center)}",
+                f"plm.Base = {toString(ssBase)}",
                 f"plm.Rotation.Q = {qr}",
-                "rs.Placement = plm",
-                f"rs.AttachmentSupport = {sup}",
-                "Draft.autogroup(rs)",
+                "ss.Placement = plm",
+                f"ss.AttachmentSupport = {sup}",
+                "Draft.autogroup(ss)", # Requires the "Draft" module
                 "FreeCAD.ActiveDocument.recompute()",
             ]
-            _msg("RadialShapeString commit commands:\n" + "\n".join(commands))
-            self.sourceCmd.commit(
-                translate("draft", "Create RadialShapeString"), commands
-            )
+            # Print the commands that will be passed to commit for debugging/logging
+            _msg("SpacedShapeString commit commands:\n" + "\n".join(commands))
+            self.sourceCmd.commit(translate("draft", "Create SpacedShapeString"), commands)
         except Exception:
-            _err("AdvancedShapestrings_RadialShapeString: error delaying commit\n")
+            _err("ShapeStrings_Spaced: error delaying commit\n")
+            # Also print the full Python traceback to the console/log
             traceback.print_exc()
 
 
-class RadialShapeStringTaskPanelEdit(RadialShapeStringTaskPanel):
-    """Task panel for Draft RadialShapeString object in edit mode."""
+class SpacedShapeStringTaskPanelEdit(SpacedShapeStringTaskPanel):
+    """Task panel for Draft SpacedShapeString object in edit mode."""
 
     def __init__(self, vobj):
-        obj = vobj.Object
+        base = vobj.Object.Placement.Base
+        size = vobj.Object.Size.Value
+        strings = list(vobj.Object.Strings)
+        offset = vobj.Object.Offset.Value
+        use_bounding_box = bool(getattr(vobj.Object, "UseBoundingBox", False))
+        font = vobj.Object.FontFile
 
-        base = obj.Placement.Base
-        size = obj.Size.Value
-        strings = list(obj.Strings)
-        radius = obj.Radius.Value
-        start_angle = float(obj.StartAngle)
-        angle_step = float(obj.AngleStep)
-        tangential = bool(getattr(obj, "Tangential", True))
-        font = obj.FontFile
-        rotation_direction = getattr(obj, "RotationDirection", "CounterClockwise")
-        string_rotation = float(getattr(obj, "StringRotation", 0.0))
-
-        super().__init__(
-            point=base,
-            size=size,
-            strings=strings,
-            radius=radius,
-            start_angle=start_angle,
-            angle_step=angle_step,
-            tangential=tangential,
-            rotation_direction=rotation_direction,
-            string_rotation=string_rotation,
-            font=font,
-        )
-
+        super().__init__(base, size, strings, offset, use_bounding_box, font)
 
         self.pointPicked = True
         self.vobj = vobj
         self.call = Gui.activeView().addEventCallback("SoEvent", self.action)
 
     def accept(self):
-        # Center point
         x = App.Units.Quantity(self.form.sbX.text()).Value
         y = App.Units.Quantity(self.form.sbY.text()).Value
         z = App.Units.Quantity(self.form.sbZ.text()).Value
         base = App.Vector(x, y, z)
 
-        # Parameters
         size = App.Units.Quantity(self.form.sbHeight.text()).Value
         strings = self.collectStrings()
-        radius = App.Units.Quantity(self.form.sbRadius.text()).Value
-        start_angle = App.Units.Quantity(self.form.sbStartAngle.text()).Value
-        angle_step = App.Units.Quantity(self.form.sbAngleStep.text()).Value
-        tangential = bool(self.form.cbTangential.isChecked())
+        offset = App.Units.Quantity(self.form.sbOffset.text()).Value
+        use_bounding_box = bool(self.form.cbUseBoundingBox.isChecked())
         font_file = self.fileSpec
-        rotation_direction = (
-            "CounterClockwise"
-            if self.form.cbRotationDirection.currentIndex() == 0
-            else "Clockwise"
-        )
-        string_rotation = App.Units.Quantity(self.form.sbStringRotation.text()).Value
 
         o = 'FreeCAD.ActiveDocument.getObject("{}")'.format(self.vobj.Object.Name)
         Gui.doCommand(o + ".Placement.Base=" + toString(base))
         Gui.doCommand(o + ".Size=" + str(size))
         Gui.doCommand(o + ".Strings=" + repr(strings))
-        Gui.doCommand(o + ".Radius=" + str(radius))
-        Gui.doCommand(o + ".StartAngle=" + str(start_angle))
-        Gui.doCommand(o + ".AngleStep=" + str(angle_step))
-        Gui.doCommand(o + ".Tangential=" + str(tangential))
+        Gui.doCommand(o + ".Offset=" + str(offset))
+        Gui.doCommand(o + ".UseBoundingBox=" + str(use_bounding_box))
         Gui.doCommand(o + '.FontFile="' + font_file + '"')
-        Gui.doCommand(o + ".RotationDirection=" + repr(rotation_direction))
-        Gui.doCommand(o + ".StringRotation=" + str(string_rotation))
         Gui.doCommand("FreeCAD.ActiveDocument.recompute()")
 
+        # Persist font used in edit as Shapestring default
         if not hasattr(self, "_adv_params"):
             self._adv_params = App.ParamGet(ADV_PARAM_GROUP)
         self._adv_params.SetString("FontFile", str(font_file))
@@ -461,4 +389,3 @@ class RadialShapeStringTaskPanelEdit(RadialShapeStringTaskPanel):
         Gui.Snapper.off()
         Gui.Control.closeDialog()
         return None
-
