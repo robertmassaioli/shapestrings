@@ -1,0 +1,2 @@
+
+from .Command import registerSpaced

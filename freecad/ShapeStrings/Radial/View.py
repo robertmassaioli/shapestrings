@@ -29,8 +29,8 @@
 import FreeCADGui as Gui
 
 from draftviewproviders.view_base import ViewProviderDraft
-from ..Dialogs import RadialShapeStringTaskPanelEdit
 from ..Misc.Resources import asIcon
+from .Dialog import RadialShapeStringTaskPanelEdit
 
 
 class ViewProviderRadialShapeString(ViewProviderDraft):

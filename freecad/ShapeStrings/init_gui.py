@@ -2,8 +2,9 @@
 # SPDX-FileNotice: Part of the ShapeStrings addon.
 
 from .Misc.Resources import paths
-from .Commands import registerCommands
 from .Misc.Toolbar import extendToolbar
+from .Spaced import registerSpaced
+from .Radial import registerRadial
 
 from FreeCAD import Gui
 
@@ -11,5 +12,7 @@ from FreeCAD import Gui
 Gui.addLanguagePath(paths['translations'])
 Gui.updateLocale()
 
-registerCommands()
+registerRadial()
+registerSpaced()
+
 extendToolbar()

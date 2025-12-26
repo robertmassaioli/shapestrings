@@ -27,10 +27,10 @@
 import FreeCAD as App
 import draftutils.gui_utils as gui_utils
 
-from ..Objects import SpacedShapeString
+from .Object import SpacedShapeString
 
 if App.GuiUp:
-    from ..Views import ViewProviderSpacedShapeString
+    from .View import ViewProviderSpacedShapeString
 
 
 def make_spacedshapestring(Strings, FontFile, Size=100, Offset=10, UseBoundingBox=False):

@@ -28,8 +28,8 @@
 import FreeCADGui as Gui
 
 from draftviewproviders.view_base import ViewProviderDraft
-from ..Dialogs import SpacedShapeStringTaskPanelEdit
 from ..Misc.Resources import asIcon
+from .Dialog import SpacedShapeStringTaskPanelEdit
 
 class ViewProviderSpacedShapeString(ViewProviderDraft):
 
