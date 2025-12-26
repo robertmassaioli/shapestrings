@@ -23,13 +23,7 @@
 ################################################################################
 
 """Provides the object code for the RadialShapeString object."""
-## @package radial_shapestring
-# \ingroup draftobjects
-# \brief Provides the object code for the RadialShapeString object.
 
-
-## \addtogroup draftobjects
-# @{
 import math
 
 import FreeCAD as App

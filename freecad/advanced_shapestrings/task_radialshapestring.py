@@ -26,13 +26,6 @@
 """Provides the task panel code for the Draft RadialShapeString tool."""
 
 
-## @package task_radialshapestring
-# \ingroup drafttaskpanels
-# \brief Provides the task panel code for the Draft RadialShapeString tool.
-## \addtogroup drafttaskpanels
-# @{
-
-
 import traceback
 import PySide.QtCore as QtCore
 import PySide.QtGui as QtGui

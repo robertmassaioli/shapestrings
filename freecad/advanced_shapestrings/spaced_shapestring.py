@@ -23,12 +23,7 @@
 ################################################################################
 
 """Provides the object code for the SpacedShapeString object."""
-## @package spaced_shapestring
-# \ingroup draftobjects
-# \brief Provides the object code for the SpacedShapeString object.
 
-## \addtogroup draftobjects
-# @{
 import math
 
 import FreeCAD as App

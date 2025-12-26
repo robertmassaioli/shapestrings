@@ -32,13 +32,7 @@ into solid bodies.
 They are more complex that simple text annotations, and support multiple
 strings with configurable spacing.
 """
-## @package gui_spacedshapestrings
-# \ingroup draftguitools
-# \brief Provides GUI tools to create spaced text shapes with a particular font.
 
-
-## \addtogroup draftguitools
-# @{
 
 import FreeCAD as App
 import FreeCADGui as Gui

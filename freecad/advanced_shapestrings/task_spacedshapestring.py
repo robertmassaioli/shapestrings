@@ -24,12 +24,6 @@
 
 """Provides the task panel code for the Draft SpacedShapeString tool."""
 
-## @package task_spacedshapestring
-# \ingroup drafttaskpanels
-# \brief Provides the task panel code for the Draft SpacedShapeString tool.
-## \addtogroup drafttaskpanels
-# @{
-
 import traceback
 import PySide.QtCore as QtCore
 import PySide.QtGui as QtGui

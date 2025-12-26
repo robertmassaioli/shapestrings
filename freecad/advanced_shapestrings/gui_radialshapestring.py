@@ -36,14 +36,7 @@ They are more complex than simple text annotations, and support multiple
 strings positioned on an arc with configurable radius, starting angle,
 angular step, and optional tangential alignment to the circle.
 """
-## @package gui_radialshapestrings
-# \ingroup draftguitools
-# \brief Provides GUI tools to create radial text shapes with a particular font.
 
-
-
-## \addtogroup draftguitools
-# @{
 import FreeCAD as App
 import FreeCADGui as Gui
 import Draft_rc
