@@ -34,18 +34,14 @@ strings with configurable spacing.
 """
 
 
-import FreeCAD as App
 import FreeCADGui as Gui
 import Draft_rc
-import DraftVecUtils
-import draftutils.utils as utils
 import draftguitools.gui_base_original as gui_base_original
-import draftguitools.gui_tool_utils as gui_tool_utils
 import draftutils.todo as todo
 
 from ..paths import get_icon_path
 from ..task_spacedshapestring import SpacedShapeStringTaskPanelCmd
-from draftutils.messages import _toolmsg, _err, _msg
+from draftutils.messages import _toolmsg
 
 # The module is used to prevent complaints from code checkers (flake8)
 True if Draft_rc.__name__ else False

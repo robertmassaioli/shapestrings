@@ -37,18 +37,14 @@ strings positioned on an arc with configurable radius, starting angle,
 angular step, and optional tangential alignment to the circle.
 """
 
-import FreeCAD as App
 import FreeCADGui as Gui
 import Draft_rc
-import DraftVecUtils
-import draftutils.utils as utils
 import draftguitools.gui_base_original as gui_base_original
-import draftguitools.gui_tool_utils as gui_tool_utils
 import draftutils.todo as todo
 
 from ..paths import get_icon_path
 from ..task_radialshapestring import RadialShapeStringTaskPanelCmd
-from draftutils.messages import _toolmsg, _err, _msg
+from draftutils.messages import _toolmsg
 
 
 # The module is used to prevent complaints from code checkers (flake8)

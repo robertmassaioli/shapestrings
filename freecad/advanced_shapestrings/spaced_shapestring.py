@@ -30,7 +30,7 @@ import FreeCAD as App
 import Part
 
 from draftgeoutils import faces
-from draftutils.messages import _wrn, _msg, _toolmsg
+from draftutils.messages import _toolmsg
 
 from draftobjects.base import DraftObject
 from .justification import justification_vector
