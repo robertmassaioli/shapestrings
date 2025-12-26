@@ -3,7 +3,7 @@
 
 from .Misc.Resources import paths
 from .Commands import registerCommands
-from .Toolbar import extendToolbar
+from .Misc.Toolbar import extendToolbar
 
 from FreeCAD import Gui
 
