@@ -61,7 +61,7 @@ class RadialShapeString(gui_base_original.Creator):
     def GetResources(self):
         """Set icon, menu, and tooltip."""
         return {
-            'Pixmap': asIcon('AdvancedShapestrings_RadialShapeString'),
+            'Pixmap': asIcon('Radial'),
             'MenuText': translate(
                 "ShapeStrings-Radial",
                 "Radial ShapeString"

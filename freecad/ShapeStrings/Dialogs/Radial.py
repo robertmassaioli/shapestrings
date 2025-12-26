@@ -71,11 +71,11 @@ class RadialShapeStringTaskPanel:
             strings = []
 
         # Load custom UI for radial shapestring
-        self.form = Gui.PySideUic.loadUi(asUI('TaskRadialShapeString'))
+        self.form = Gui.PySideUic.loadUi(asUI('Radial'))
         self.form.setObjectName("RadialShapeStringTaskPanel")
         self.form.setWindowTitle(translate("draft", "RadialShapeString"))
         self.form.setWindowIcon(
-            QtGui.QIcon(asIcon('AdvancedShapestrings_RadialShapeString'))
+            QtGui.QIcon(asIcon('Radial'))
         )
 
         unit_length = App.Units.Quantity(0.0, App.Units.Length).getUserPreferred()[2]
@@ -370,7 +370,7 @@ class RadialShapeStringTaskPanelCmd(RadialShapeStringTaskPanel):
                 translate("draft", "Create RadialShapeString"), commands
             )
         except Exception:
-            _err("AdvancedShapestrings_RadialShapeString: error delaying commit\n")
+            _err("ShapeStrings_Radial: error delaying commit\n")
             traceback.print_exc()
 
 

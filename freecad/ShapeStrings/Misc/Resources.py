@@ -7,15 +7,15 @@ from os.path import dirname , join
 from typing import TypedDict
 
 
-icons = resources.files(module) / 'resources/icons'
-uis = resources.files(module) / 'resources/ui'
+icons = resources.files(module) / 'Resources/Icons'
+uis = resources.files(module) / 'Resources/Interfaces'
 
 
 class Paths ( TypedDict ):
     translations : str
 
 paths : Paths = {
-    'translations' : join(dirname(__file__),'..','resources','translations')
+    'translations' : join(dirname(__file__),'..','Resources','Translations')
 }
 
 

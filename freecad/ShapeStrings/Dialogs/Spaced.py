@@ -63,10 +63,10 @@ class SpacedShapeStringTaskPanel:
             strings = []
 
         # Load custom UI for spaced shapestring
-        self.form = Gui.PySideUic.loadUi(asUI('TaskSpacedShapeString'))
+        self.form = Gui.PySideUic.loadUi(asUI('Spaced'))
         self.form.setObjectName("SpacedShapeStringTaskPanel")
         self.form.setWindowTitle(translate("draft", "SpacedShapeString"))
-        self.form.setWindowIcon(QtGui.QIcon(asIcon('AdvancedShapestrings_SpacedShapeString')))
+        self.form.setWindowIcon(QtGui.QIcon(asIcon('Spaced')))
 
         unit_length = App.Units.Quantity(0.0, App.Units.Length).getUserPreferred()[2]
 
@@ -152,7 +152,7 @@ class SpacedShapeStringTaskPanel:
         )
 
     def fileSelect(self, fn):
-        """Assign the selected file and remember it as default for AdvancedShapestring."""
+        """Assign the selected file and remember it as default for ShapeStrings."""
         self.fileSpec = fn
         # Ensure parameter group exists
         if not hasattr(self, "_adv_params"):

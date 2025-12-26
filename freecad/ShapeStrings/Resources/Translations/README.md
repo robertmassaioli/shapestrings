@@ -1,7 +1,7 @@
 # About translating advanced_shapestrings Workbench
 
 > [!NOTE]
-> All commands **must** be run in `./freecad/advanced_shapestrings/resources/translations/` directory.
+> All commands **must** be run in `./freecad/ShapeStrings/Resources/Translations/` directory.
 
 > [!IMPORTANT]
 > If you want to update/release the files you need to have installed

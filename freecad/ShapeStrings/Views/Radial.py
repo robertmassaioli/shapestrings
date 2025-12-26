@@ -39,7 +39,7 @@ class ViewProviderRadialShapeString(ViewProviderDraft):
         vobj.Proxy = self
 
     def getIcon(self):
-        return asIcon('AdvancedShapestrings_RadialShapeString')
+        return asIcon('Radial')
 
     def updateData(self, obj, prop):
         if (

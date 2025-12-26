@@ -57,7 +57,7 @@ class SpacedShapeString(gui_base_original.Creator):
     def GetResources(self):
         """Set icon, menu, and tooltip."""
         return {
-            'Pixmap': asIcon('AdvancedShapestrings_SpacedShapeString'),
+            'Pixmap': asIcon('Spaced'),
             'MenuText': translate(
                 "ShapeStrings-Spaced",
                 "Spaced ShapeString"

@@ -12,7 +12,7 @@ This Workbench was developed against FreeCad version 1.0.2 and is designed to wo
 
 Icon: 
 
-![SpacedShapeString icon](./freecad/ShapeStrings/resources/icons/AdvancedShapestrings_SpacedShapeString.svg)
+![SpacedShapeString icon](./freecad/ShapeStrings/Resources/Icons/Spaced.svg)
 
 ### Screenshot
 
@@ -69,7 +69,7 @@ The resulting shapes are standard FreeCAD objects that work seamlessly with both
 
 Icon: 
 
-![RadialShapeString icon](./freecad/ShapeStrings/resources/icons/AdvancedShapestrings_RadialShapeString.svg)
+![RadialShapeString icon](./freecad/ShapeStrings/Resources/Icons/Radial.svg)
 
 ### Screenshot
 
