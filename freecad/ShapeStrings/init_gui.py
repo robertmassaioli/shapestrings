@@ -9,7 +9,6 @@ from .API import initializeAPI
 
 from FreeCAD import Gui
 
-
 Gui.addLanguagePath(paths['translations'])
 Gui.updateLocale()
 
