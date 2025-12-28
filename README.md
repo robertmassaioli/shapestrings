@@ -188,7 +188,7 @@ Radial(
 
 ### Via the Addon Manager
 
-TODO
+Coming soon: https://github.com/FreeCAD/FreeCAD-addons/issues/519
 
 ### User install (for development)
 Copy the module directory into FreeCAD's Mod folder, then restart FreeCAD.
