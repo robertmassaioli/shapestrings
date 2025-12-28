@@ -27,13 +27,13 @@
     <!--[ Maintainers ]――――――――――――――――――――――――――――――――――――――――――――――――――――――-->
 
     <maintainer
-        email = 'advanced-shapestrings@rmdir.app'
+        email = 'ShapeStrings@rmdir.app'
     >Robert Massaioli</maintainer>
 
     <!--[ Authors ]――――――――――――――――――――――――――――――――――――――――――――――――――――――――――-->
 
     <author
-        email = 'advanced-shapestrings@rmdir.app'
+        email = 'ShapeStrings@rmdir.app'
     >Robert Massaioli</author>
 
     <!--[ Licenses ]―――――――――――――――――――――――――――――――――――――――――――――――――――――――――-->
@@ -50,20 +50,20 @@
 
     <url
         type = 'documentation'
-    >https://github.com/robertmassaioli/advanced-shapestrings</url>
+    >https://github.com/robertmassaioli/ShapeStrings/tree/main/Documentation</url>
 
     <url
         branch = 'main'
         type = 'repository'
-    >https://github.com/robertmassaioli/advanced-shapestrings</url>
+    >https://github.com/robertmassaioli/ShapeStrings</url>
 
     <url
         type = 'bugtracker'
-    >https://github.com/robertmassaioli/advanced-shapestrings/issues</url>
+    >https://github.com/robertmassaioli/ShapeStrings/issues</url>
 
     <url
         type = 'readme'
-    >https://github.com/robertmassaioli/advanced-shapestrings/blob/main/README.md</url>
+    >https://github.com/robertmassaioli/ShapeStrings/blob/main/Resources/Documents/Overview.md</url>
 
     <!--[ Content ]――――――――――――――――――――――――――――――――――――――――――――――――――――――――――-->
 
