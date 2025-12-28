@@ -12,6 +12,6 @@
 -   [How to use the **Radial** command][Radial]
 
 
-[Spaced]: ./Commands/Spaced
-[Radial]: ./Commands/Radial
-[API]: ./API
+[Spaced]: ./Commands/Spaced.md
+[Radial]: ./Commands/Radial.md
+[API]: ./API.md

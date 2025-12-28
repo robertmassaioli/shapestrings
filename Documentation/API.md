@@ -62,5 +62,5 @@ Radial(
 
 
 
-[Spaced]: ./Commands/Spaced
-[Radial]: ./Commands/Radial
+[Spaced]: ./Commands/Spaced.md
+[Radial]: ./Commands/Radial.md

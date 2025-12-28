@@ -16,9 +16,6 @@ The result is a regular FreeCAD shape object that works with
 
 <img src = '../../Resources/Media/Examples/Spaced.webp' />
 
-![SpacedShapeString icon](./freecad/ShapeStrings/Resources/Icons/Spaced.svg)
-
-
 <br/>
 
 ## Use Cases

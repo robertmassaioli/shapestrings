@@ -8,7 +8,7 @@ ShapeString tools into the Draft workbench.
 
 [» Read more about it here.][Documentation]
 
-[Documentation]: ./Documentation
+[Documentation]: ./Documentation.md
 
 ## Showcase
 
