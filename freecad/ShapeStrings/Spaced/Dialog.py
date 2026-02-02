@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: LGPL-2.1-only
+# SPDX-License-Identifier: LGPL-2.1-or-later
 # SPDX-FileCopyrightText: 2009 Yorik van Havre <yorik@uncreated.net>
 # SPDX-FileCopyrightText: 2020 Eliud Cabrera Castillo <e.cabrera-castillo@tum.de>
 # SPDX-FileCopyrightText: 2025 FreeCAD Project Association

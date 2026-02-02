@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: LGPL-2.1-only
+# SPDX-License-Identifier: LGPL-2.1-or-later
 # SPDX-FileCopyrightText: 2022 Mario Passaglia
 # SPDX-FileCopyrightText: 2025 Robert Massaioli
 # SPDX-FileNotice: Part of the ShapeStrings addon.
