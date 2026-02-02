@@ -1,9 +1,11 @@
 # SPDX-License-Identifier: LGPL-2.1-only
+# SPDX-FileCopyrightText: 2009 Yorik van Havre <yorik@uncreated.net>
+# SPDX-FileCopyrightText: 2020 Eliud Cabrera Castillo <e.cabrera-castillo@tum.de>
+# SPDX-FileCopyrightText: 2025 FreeCAD Project Association
+# SPDX-FileCopyrightText: 2025 Robert Massaioli
 # SPDX-FileNotice: Part of the ShapeStrings addon.
 
 ################################################################################
-#                                                                              #
-#   Copyright (c) 2025 Robert Massaioli                                        #
 #                                                                              #
 #   This library is free software; you can redistribute it and/or modify it    #
 #   under the terms of the GNU Lesser General Public License as published      #
