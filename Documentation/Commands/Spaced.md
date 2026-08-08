@@ -72,6 +72,18 @@ The result is a regular FreeCAD shape object that works with
     and the start of the next is kept equal to the offset,  
     using each string’s bounding box to measure its width.
 
+-   `Columns`  
+    Number of strings per row before wrapping to a new row.  
+    `0` keeps every string on a single row (the default,  
+    unchanged from previous versions). Empty entries in  
+    `Strings` are skipped entirely and do not occupy a  
+    grid cell, matching how they behave in a single row.
+
+-   `RowSpacing`  
+    Vertical spacing applied between rows, used only when  
+    `Columns` is greater than `0`. Rows advance downward  
+    (in -Y) from the first row.
+
 <br/>
 
 ## Creation
@@ -107,7 +119,11 @@ The result is a regular FreeCAD shape object that works with
     *Set the bounding box option*  
     *to space strings by their width.*
 
-    F.  Finish the operation by  
+    F.  Optionally set `Columns` and  
+        `Row Spacing` to wrap the strings  
+        onto a grid instead of a single row.
+
+    G.  Finish the operation by  
         clicking the `Ok` button.
 
 <br/>
@@ -123,8 +139,10 @@ from ShapeStrings import Spaced
 Spaced(
     UseBoundingBox = False ,
     FontFile = '/path/to/font.ttf' ,
-    Strings = [ 'String1' , 'String2' ] ,
+    Strings = [ 'String1' , 'String2' , 'String3' , 'String4' ] ,
     Offset = 5 ,
     Size = 10 ,
+    Columns = 2 ,
+    RowSpacing = 15 ,
 )
 ```

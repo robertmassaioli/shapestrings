@@ -67,6 +67,16 @@ class SpacedShapeString(DraftObject):
             obj.addProperty("App::PropertyBool", "UseBoundingBox", "Draft", _tip)
             obj.UseBoundingBox = False
 
+        if "Columns" not in properties:
+            _tip = translate("App::Property", "Number of strings per row before wrapping to a new row (0 = single row)")
+            obj.addProperty("App::PropertyInteger", "Columns", "Draft", _tip)
+            obj.Columns = 0
+
+        if "RowSpacing" not in properties:
+            _tip = translate("App::Property", "Y-direction spacing between rows, used when Columns is greater than 0")
+            obj.addProperty("App::PropertyLength", "RowSpacing", "Draft", _tip)
+            obj.RowSpacing = 10.0
+
         if "FontFile" not in properties:
             _tip = translate("App::Property", "Font file name")
             obj.addProperty("App::PropertyFile", "FontFile", "Draft", _tip)
@@ -133,6 +143,8 @@ class SpacedShapeString(DraftObject):
             plm = obj.Placement
             all_shapes = []
             x_offset = App.Units.Quantity(0, App.Units.Length)  # 0 mm
+            y_offset = App.Units.Quantity(0, App.Units.Length)  # 0 mm
+            rendered_count = 0  # count of strings actually rendered, used for row wrapping
 
             # Pre-calculate justification vector once (same for all strings)
             # Create a test shape to get justification parameters
@@ -142,7 +154,7 @@ class SpacedShapeString(DraftObject):
                 cap_height = obj.Size
 
             # Process each string in the list
-            for string_index, string_text in enumerate(obj.Strings):
+            for string_text in obj.Strings:
                 if not string_text:
                     continue
 
@@ -202,12 +214,16 @@ class SpacedShapeString(DraftObject):
                     for shape in shapes:
                         shape.translate(just_vec)
 
-                    # Apply x-direction offset for this string
-                    # (first string has no offset applied)
-                    if string_index > 0:
-                        offset_vec = App.Vector(x_offset, 0, 0)
-                        for shape in shapes:
-                            shape.translate(offset_vec)
+                    # Wrap to a new row every `Columns` rendered strings
+                    # (rows advance in -Y, so RowSpacing accumulates downward)
+                    if obj.Columns > 0 and rendered_count > 0 and rendered_count % obj.Columns == 0:
+                        x_offset = App.Units.Quantity(0, App.Units.Length)
+                        y_offset -= obj.RowSpacing
+
+                    # Apply x/y-direction offset for this string
+                    offset_vec = App.Vector(x_offset, y_offset, 0)
+                    for shape in shapes:
+                        shape.translate(offset_vec)
 
                     # Calculate spacing for next string if UseBoundingBox is enabled
                     _toolmsg("type x_offset: {} repr: {}".format(type(x_offset), repr(x_offset)))
@@ -223,6 +239,7 @@ class SpacedShapeString(DraftObject):
                     x_offset += obj.Offset
 
                     all_shapes.extend(shapes)
+                    rendered_count += 1
 
             if all_shapes:
                 obj.Shape = Part.Compound(all_shapes)

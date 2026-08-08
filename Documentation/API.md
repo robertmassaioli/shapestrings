@@ -30,7 +30,9 @@ Spaced(
     FontFile = ... ,
     String = ... ,
     Offset = ... ,
-    Size = ...
+    Size = ... ,
+    Columns = ... ,
+    RowSpacing = ...
 )
 ```
 

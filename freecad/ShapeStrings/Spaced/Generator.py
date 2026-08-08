@@ -35,13 +35,16 @@ if App.GuiUp:
     from .View import ViewProviderSpacedShapeString
 
 
-def make_spacedshapestring(Strings, FontFile, Size=100, Offset=10, UseBoundingBox=False):
-    """SpacedShapeString(Strings,FontFile,[Height],[Offset],[UseBoundingBox])
+def make_spacedshapestring(Strings, FontFile, Size=100, Offset=10, UseBoundingBox=False,
+                            Columns=0, RowSpacing=10):
+    """SpacedShapeString(Strings,FontFile,[Height],[Offset],[UseBoundingBox],[Columns],[RowSpacing])
 
     Turns a list of text strings into a single Compound Shape, with each
     string rendered using the given font and separated in the x-direction
     by the specified offset (and optionally using each string's bounding
-    box width to compute spacing).
+    box width to compute spacing). If Columns is greater than 0, the
+    strings wrap to a new row every Columns entries, with rows separated
+    by RowSpacing in the y-direction.
     """
     App.Console.PrintMessage("Creating SpacedShapeString object...\n")
 
@@ -60,6 +63,8 @@ def make_spacedshapestring(Strings, FontFile, Size=100, Offset=10, UseBoundingBo
     obj.Size = Size
     obj.Offset = Offset
     obj.UseBoundingBox = bool(UseBoundingBox)
+    obj.Columns = int(Columns)
+    obj.RowSpacing = RowSpacing
 
     # Print all object properties to the FreeCAD console
     App.Console.PrintMessage("SpacedShapeString properties:\n")

@@ -59,7 +59,9 @@ class SpacedShapeStringTaskPanel:
                  strings=None,
                  offset=10.0,
                  use_bounding_box=False,
-                 font=""):
+                 font="",
+                 columns=0,
+                 row_spacing=10.0):
 
         if strings is None:
             strings = []
@@ -100,6 +102,11 @@ class SpacedShapeStringTaskPanel:
         self.form.sbOffset.setProperty("rawValue", offset)
         self.form.sbOffset.setProperty("unit", unit_length)
         self.form.cbUseBoundingBox.setChecked(bool(use_bounding_box))
+
+        # Columns and RowSpacing controls
+        self.form.sbColumns.setValue(int(columns))
+        self.form.sbRowSpacing.setProperty("rawValue", row_spacing)
+        self.form.sbRowSpacing.setProperty("unit", unit_length)
 
         # Platform dialog setup
         self.platWinDialog("Overwrite")
@@ -299,6 +306,8 @@ class SpacedShapeStringTaskPanelCmd(SpacedShapeStringTaskPanel):
         Size = str(App.Units.Quantity(self.form.sbHeight.text()).Value)
         Offset = str(App.Units.Quantity(self.form.sbOffset.text()).Value)
         UseBoundingBox = str(bool(self.form.cbUseBoundingBox.isChecked()))
+        Columns = str(int(self.form.sbColumns.value()))
+        RowSpacing = str(App.Units.Quantity(self.form.sbRowSpacing.text()).Value)
 
         # Base point
         x = App.Units.Quantity(self.form.sbX.text()).Value
@@ -316,7 +325,8 @@ class SpacedShapeStringTaskPanelCmd(SpacedShapeStringTaskPanel):
                     f"ss = {c}.Spaced("
                     f"Strings={string_list_expr}, "
                     f"FontFile={FFile}, Size={Size}, Offset={Offset}, "
-                    f"UseBoundingBox={UseBoundingBox})"
+                    f"UseBoundingBox={UseBoundingBox}, "
+                    f"Columns={Columns}, RowSpacing={RowSpacing})"
                 ),
                 "plm = FreeCAD.Placement()",
                 f"plm.Base = {toString(ssBase)}",
@@ -345,8 +355,10 @@ class SpacedShapeStringTaskPanelEdit(SpacedShapeStringTaskPanel):
         offset = vobj.Object.Offset.Value
         use_bounding_box = bool(getattr(vobj.Object, "UseBoundingBox", False))
         font = vobj.Object.FontFile
+        columns = int(getattr(vobj.Object, "Columns", 0))
+        row_spacing = getattr(vobj.Object, "RowSpacing", App.Units.Quantity(10.0, App.Units.Length)).Value
 
-        super().__init__(base, size, strings, offset, use_bounding_box, font)
+        super().__init__(base, size, strings, offset, use_bounding_box, font, columns, row_spacing)
 
         self.pointPicked = True
         self.vobj = vobj
@@ -362,6 +374,8 @@ class SpacedShapeStringTaskPanelEdit(SpacedShapeStringTaskPanel):
         strings = self.collectStrings()
         offset = App.Units.Quantity(self.form.sbOffset.text()).Value
         use_bounding_box = bool(self.form.cbUseBoundingBox.isChecked())
+        columns = int(self.form.sbColumns.value())
+        row_spacing = App.Units.Quantity(self.form.sbRowSpacing.text()).Value
         font_file = self.fileSpec
 
         o = 'FreeCAD.ActiveDocument.getObject("{}")'.format(self.vobj.Object.Name)
@@ -370,6 +384,8 @@ class SpacedShapeStringTaskPanelEdit(SpacedShapeStringTaskPanel):
         Gui.doCommand(o + ".Strings=" + repr(strings))
         Gui.doCommand(o + ".Offset=" + str(offset))
         Gui.doCommand(o + ".UseBoundingBox=" + str(use_bounding_box))
+        Gui.doCommand(o + ".Columns=" + str(columns))
+        Gui.doCommand(o + ".RowSpacing=" + str(row_spacing))
         Gui.doCommand(o + '.FontFile="' + font_file + '"')
         Gui.doCommand("FreeCAD.ActiveDocument.recompute()")
 
