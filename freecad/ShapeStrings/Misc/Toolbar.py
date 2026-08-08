@@ -14,11 +14,17 @@ class Manipulator:
             'toolBar' : draft_creation_1_0,
             'append' : 'ShapeStrings_Radial'
         },{
+            'toolBar' : draft_creation_1_0,
+            'append' : 'ShapeStrings_Grid'
+        },{
             'toolBar' : draft_creation_1_1,
             'append' : 'ShapeStrings_Spaced'
         },{
             'toolBar' : draft_creation_1_1,
             'append' : 'ShapeStrings_Radial'
+        },{
+            'toolBar' : draft_creation_1_1,
+            'append' : 'ShapeStrings_Grid'
         }]
 
 

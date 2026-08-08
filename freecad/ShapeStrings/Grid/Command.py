@@ -1,0 +1,100 @@
+# SPDX-License-Identifier: LGPL-2.1-or-later
+# SPDX-FileCopyrightText: 2009 Yorik van Havre <yorik@uncreated.net>
+# SPDX-FileCopyrightText: 2009 Ken Cline <cline@frii.com>
+# SPDX-FileCopyrightText: 2020 Eliud Cabrera Castillo <e.cabrera-castillo@tum.de>
+# SPDX-FileCopyrightText: 2025 Robert Massaioli
+# SPDX-FileNotice: Part of the ShapeStrings addon.
+
+################################################################################
+#                                                                              #
+#   This library is free software; you can redistribute it and/or modify it    #
+#   under the terms of the GNU Lesser General Public License as published      #
+#   by the Free Software Foundation; either version 2.1 of the License, or     #
+#   (at your option) any later version.                                        #
+#                                                                              #
+#   This library is distributed in the hope that it will be useful,            #
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of             #
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                       #
+#                                                                              #
+#   See the GNU Lesser General Public License for more details.                #
+#                                                                              #
+#   You should have received a copy of the GNU Lesser General Public License   #
+#   along with this library; if not, write to the Free Software Foundation,    #
+#   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA           #
+#                                                                              #
+################################################################################
+
+"""Provides GUI tools to create grid-arranged text shapes with a particular font.
+
+These text shapes are made of various edges and closed faces, and therefore
+can be extruded to create solid bodies that can be used in boolean
+operations. That is, these text shapes can be used for engraving text
+into solid bodies.
+
+They are more complex than simple text annotations, and support multiple
+strings wrapped onto a 2D grid of rows and columns.
+"""
+
+
+import FreeCADGui as Gui
+import Draft_rc
+import draftguitools.gui_base_original as gui_base_original
+import draftutils.todo as todo
+
+from ..Misc.Resources import asIcon
+from .Dialog import GridShapeStringTaskPanelCmd
+from draftutils.messages import _toolmsg
+
+# The module is used to prevent complaints from code checkers (flake8)
+True if Draft_rc.__name__ else False
+
+from FreeCAD import Qt
+
+translate = Qt.translate
+
+
+class GridShapeString(gui_base_original.Creator):
+    """Gui command for the GridShapeString tool."""
+
+    def GetResources(self):
+        """Set icon, menu, and tooltip."""
+        return {
+            'Pixmap': asIcon('Grid'),
+            'MenuText': translate(
+                "ShapeStrings-Grid",
+                "Grid ShapeString"
+            ),
+            'ToolTip': translate(
+                "ShapeStrings-Grid",
+                "Creates multiple ShapeStrings from a list of text entries, "
+                "wrapped onto a 2D grid after a configurable number of columns. "
+                "Column and row spacing can be fixed, or adjusted for visible gaps "
+                "using each string's bounding box. "
+                "Useful for laying out labelled tiles, keypads, or plaques for Part and PartDesign operations."
+            ),
+        }
+
+    def Activated(self):
+        """Execute when the command is called."""
+        super().Activated(name="GridShapeString")
+        if self.ui:
+            self.ui = Gui.draftToolBar
+            self.sourceCmd = self
+            self.task = GridShapeStringTaskPanelCmd(self)
+            self.call = self.view.addEventCallback("SoEvent", self.task.action)
+            _toolmsg(translate("draft", "Pick GridShapeString location point"))
+            todo.ToDo.delay(Gui.Control.showDialog, self.task)
+
+    def finish(self):
+        """Finalize the command and remove callbacks."""
+
+        if not hasattr(self, 'planetrack'):
+            self.planetrack = None
+        if hasattr(self, 'call'):
+            self.end_callbacks(self.call)
+        if not hasattr(self, 'ui'):
+            self.ui = Gui.draftToolBar
+        super().finish()
+
+def registerGrid():
+    Gui.addCommand('ShapeStrings_Grid', GridShapeString())
