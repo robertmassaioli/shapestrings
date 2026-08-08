@@ -39,7 +39,9 @@ Add two properties directly to the existing object in
   `UseBoundingBoxRows` bool) to measure row height from each row's tallest
   string instead of a fixed value.
 
-Modify `execute()` (`Object.py:144-225`) to track `row_index = string_index //
+Modify the per-string loop inside `execute()` (the loop body itself is
+`Object.py:144-225`; `execute()` as a whole spans `Object.py:125-235`) to
+track `row_index = string_index //
 Columns` and `col_index = string_index % Columns` when `Columns > 0`, resetting
 `x_offset` and accumulating a `y_offset` at each row boundary. Update
 `Spaced.ui` and `Dialog.py` to add `sbColumns` (a plain `QSpinBox`) and
