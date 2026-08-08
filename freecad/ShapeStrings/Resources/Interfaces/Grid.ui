@@ -138,7 +138,7 @@ Uncheck to use working plane coordinate system</string>
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QSpinBox" name="sbColumns">
+      <widget class="Gui::IntSpinBox" name="sbColumns">
        <property name="toolTip">
         <string>Number of columns before wrapping to a new row</string>
        </property>
@@ -278,6 +278,11 @@ Uncheck to use working plane coordinate system</string>
    <class>Gui::QuantitySpinBox</class>
    <extends>QWidget</extends>
    <header>Gui/QuantitySpinBox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>Gui::IntSpinBox</class>
+   <extends>QWidget</extends>
+   <header>Gui/SpinBox.h</header>
   </customwidget>
  </customwidgets>
  <connections/>
