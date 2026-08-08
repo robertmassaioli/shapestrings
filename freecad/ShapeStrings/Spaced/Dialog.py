@@ -352,6 +352,14 @@ class SpacedShapeStringTaskPanelEdit(SpacedShapeStringTaskPanel):
         self.vobj = vobj
         self.call = Gui.activeView().addEventCallback("SoEvent", self.action)
 
+        # Bind the numeric fields to their document object properties so the
+        # "=" shortcut and "fx" icon open FreeCAD's expression editor.
+        Gui.ExpressionBinding(self.form.sbX).bind(vobj.Object, "Placement.Base.x")
+        Gui.ExpressionBinding(self.form.sbY).bind(vobj.Object, "Placement.Base.y")
+        Gui.ExpressionBinding(self.form.sbZ).bind(vobj.Object, "Placement.Base.z")
+        Gui.ExpressionBinding(self.form.sbHeight).bind(vobj.Object, "Size")
+        Gui.ExpressionBinding(self.form.sbOffset).bind(vobj.Object, "Offset")
+
     def accept(self):
         x = App.Units.Quantity(self.form.sbX.text()).Value
         y = App.Units.Quantity(self.form.sbY.text()).Value
