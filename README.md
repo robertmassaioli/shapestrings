@@ -30,6 +30,9 @@ The latest version supports FreeCAD `1.0.2+`
 <th> 
 <img height = '10' src = './freecad/ShapeStrings/Resources/Icons/Radial.svg' /> Radial 
 </th>
+<th> 
+<img height = '10' src = './freecad/ShapeStrings/Resources/Icons/Grid.svg' /> Grid 
+</th>
 </tr>
 </thead>
 <tbody>
@@ -40,12 +43,16 @@ The latest version supports FreeCAD `1.0.2+`
 <td>
 <img src = './Resources/Media/Examples/Radial.webp' />
 </td>
+<td>
+<img src = './Resources/Media/Examples/Grid.webp' />
+</td>
 </tr>
 </tbody>
 <tfoot>
 <tr>
 <td>Creating side-by-side ShapeStrings.</td>
 <td>Creating circular aligned ShapeStrings.</td>
+<td>Wrapping ShapeStrings onto a 2D grid.</td>
 </tr>
 </tfoot>
 </table>

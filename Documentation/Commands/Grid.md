@@ -16,6 +16,12 @@ The result is a regular FreeCAD shape object that works with
 
 <br/>
 
+## Preview
+
+<img src = '../../Resources/Media/Examples/Grid.webp' />
+
+<br/>
+
 ## Use Cases
 
 -   **Labelled tile plaques**  
