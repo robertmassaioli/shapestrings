@@ -145,6 +145,49 @@ Don't hand-edit them — use the script:
 ./bump_version.py 1.2.3 --date "$(date +%F)" --git  # also stages + commits
 ```
 
+## Releasing
+
+There is no CI automation for releases (no `.github/workflows/`) — the whole
+process is manual, done from a branch and a PR like any other change:
+
+1. **Update `CHANGELOG.md`.** Move the entries accumulated under
+   `[Unreleased]` (or write them fresh if none exist yet) under a new
+   `## [X.Y.Z] — YYYY-MM-DD` heading, grouped as `Added` / `Changed` /
+   `Fixed` / `Documentation` as needed. Reference PR/issue numbers where it
+   helps.
+2. **Bump the version.** From the repo root:
+
+   ```sh
+   python3 bump_version.py X.Y.Z --date "$(date +%F)"
+   ```
+
+   This updates `freecad/ShapeStrings/Misc/Version.py`, `package.xml`
+   (version + date), and `pyproject.toml`. Commit this as its own commit —
+   the existing convention is the exact message `Bumped version to X.Y.Z`
+   (see `git log --grep "Bumped version"`) — separate from the changelog
+   commit, so each is easy to `git revert` independently if needed.
+
+   Note the script's `--git` flag stages+commits automatically but only
+   handles the version-bump commit; the changelog edit still needs its own
+   commit either way.
+3. **Open a PR** with the version-bump and changelog commits (same workflow
+   as any other change — see `.github/CONTRIBUTING.md`). Do not push
+   directly to `main`.
+4. **After the PR is merged**, tag the merge commit on `main` and push the
+   tag. Tags in this repo are `v`-prefixed even though the version strings
+   inside the three files are not (compare `git tag -l` — `v0.1.0`,
+   `v0.2.0` — against `pyproject.toml`'s `version = '0.2.0'`):
+
+   ```sh
+   git checkout main && git pull
+   git tag -a vX.Y.Z -m "vX.Y.Z"
+   git push origin vX.Y.Z
+   ```
+
+   Pushing a tag is outward-facing and irreversible for anyone who fetches
+   it — confirm with the user before running the `git push origin vX.Y.Z`
+   step, same as any other push.
+
 ## Git
 
 Standard PR-based workflow (see `.github/CONTRIBUTING.md`). This repo
