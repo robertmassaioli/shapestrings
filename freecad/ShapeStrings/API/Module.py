@@ -3,3 +3,4 @@
 
 from ..Radial.Generator import make_radialshapestring as Radial
 from ..Spaced.Generator import make_spacedshapestring as Spaced
+from ..Grid.Generator import make_gridshapestring as Grid

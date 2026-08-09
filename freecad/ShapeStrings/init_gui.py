@@ -5,6 +5,7 @@ from .Misc.Resources import paths
 from .Misc.Toolbar import extendToolbar
 from .Spaced import registerSpaced
 from .Radial import registerRadial
+from .Grid import registerGrid
 from .API import initializeAPI
 
 from FreeCAD import Gui
@@ -16,5 +17,6 @@ initializeAPI()
 
 registerRadial()
 registerSpaced()
+registerGrid()
 
 extendToolbar()

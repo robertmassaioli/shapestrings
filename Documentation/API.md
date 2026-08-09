@@ -2,7 +2,7 @@
 # API
 
 This addon exposes a small API to let you  
-create Spaced & Radial ShapeStrings via Python.
+create Spaced, Radial & Grid ShapeStrings via Python.
 
 <br/>
 
@@ -28,7 +28,7 @@ from ShapeStrings import Spaced
 Spaced(
     UseBoundingBox = ... ,
     FontFile = ... ,
-    String = ... ,
+    Strings = ... ,
     Offset = ... ,
     Size = ...
 )
@@ -62,5 +62,28 @@ Radial(
 
 
 
+## Grid
+
+Create a Grid ShapeString object with:
+
+```Python
+from ShapeStrings import Grid
+
+Grid(
+    UseBoundingBox = ... ,
+    FontFile = ... ,
+    Strings = ... ,
+    Columns = ... ,
+    ColumnOffset = ... ,
+    RowOffset = ... ,
+    Size = ... ,
+)
+```
+
+[» Read more about it here.][Grid]
+
+
+
 [Spaced]: ./Commands/Spaced.md
 [Radial]: ./Commands/Radial.md
+[Grid]: ./Commands/Grid.md

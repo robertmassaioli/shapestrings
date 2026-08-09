@@ -11,7 +11,10 @@
 
 -   [How to use the **Radial** command][Radial]
 
+-   [How to use the **Grid** command][Grid]
+
 
 [Spaced]: ./Commands/Spaced.md
 [Radial]: ./Commands/Radial.md
+[Grid]: ./Commands/Grid.md
 [API]: ./API.md
