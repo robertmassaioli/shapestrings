@@ -58,8 +58,26 @@ Dependency management is via [uv](https://docs.astral.sh/uv/):
 uv sync
 ```
 
-Then symlink `freecad/ShapeStrings` into your FreeCAD `Mod/` directory to test
-changes inside FreeCAD itself — there is no headless test runner. `python -c
+Then symlink the repository root into your FreeCAD `Mod/` directory to test
+changes inside FreeCAD itself, e.g. `Mod/ShapeStrings-dev -> /path/to/this/repo`.
+FreeCAD discovers the addon via the `freecad.*` namespace package, looking
+for `freecad/ShapeStrings/init_gui.py` — so it's the whole repo root that
+needs linking in, not just the inner `freecad/ShapeStrings` folder (that
+alone won't be found by either FreeCAD's namespace-package addon loader or
+its legacy `InitGui.py` loader).
+
+**FreeCAD keeps a separate `Mod/` per major version, and picking the wrong
+one fails silently.** On macOS, compare
+`~/Library/Application Support/FreeCAD/Mod/` against a version-suffixed
+sibling like `~/Library/Application Support/FreeCAD/v1-1/Mod/` — an install
+may read only one of them. A symlink placed in the directory the running
+FreeCAD doesn't use produces no error at startup; the addon just never
+appears. Before trusting a symlink, confirm which `Mod/` the target install
+actually reads — e.g. check where an already-working addon's symlink lives,
+or look for version-suffixed subfolders under
+`~/Library/Application Support/FreeCAD/`.
+
+There is no headless test runner. `python -c
 "import ast; ast.parse(...)"` or `python -m py_compile` on changed files is a
 reasonable sanity check when FreeCAD isn't available, but it does not
 substitute for running the workbench.
